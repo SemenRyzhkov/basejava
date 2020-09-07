@@ -4,7 +4,7 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[3];
+    Resume[] storage = new Resume[10000];
 
     void clear() {
         for (int i = 0; i < storage.length; i++) {
@@ -13,6 +13,14 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
+
+        for (Resume resume : storage) {
+            if (resume!=null&&resume.uuid.equals(r.uuid)) {
+                System.out.println("Резюме с таким uuid уже существует");
+                return;
+            }
+        }
+
         if (storage[storage.length - 1] != null) {
             System.out.println("Список заполен");
         } else if (r.uuid == null) {
