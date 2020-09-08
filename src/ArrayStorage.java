@@ -4,7 +4,7 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[3];
+    Resume[] storage = new Resume[10000];
     int size = 0;
 
     void clear() {
@@ -52,7 +52,7 @@ public class ArrayStorage {
                 size--;
             }
         }
-        for (int i = cursor+1; i < size+1; i++) {
+        for (int i = cursor+1; i <= size; i++) {
             storage[i - 1] = storage[i];
 
         }
