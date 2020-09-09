@@ -4,24 +4,43 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-    int size = 0;
+    private Resume[] storage = new Resume[10000];
+    private int size = 0;
 
-    void clear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    void save(Resume r) {
+    public void update(Resume r) {
 
-        for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(r.uuid)) {
-                System.out.println("Резюме с таким uuid уже существует");
-                return;
+        if (!checkResumeExist(r.uuid)) {
+            System.out.println("Резюме с таким uuid не существует");
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (storage[i].uuid.equals(r.uuid)) {
+                    storage[i] = r;
+                    System.out.println("Резюме c uuid " + r.uuid + " успешно обновлено");
+                }
             }
         }
+    }
 
-        if (size == storage.length) {
+    public boolean checkResumeExist(String uuid) {
+        boolean check = false;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                check = true;
+            }
+        }
+        return check;
+    }
+
+    public void save(Resume r) {
+
+        if (checkResumeExist(r.uuid)) {
+            System.out.println("Резюме с таким uuid уже существует");
+        } else if (size == storage.length) {
             System.out.println("Список заполен");
         } else if (r.uuid == null) {
             System.out.println("Введите uuid");
@@ -31,45 +50,47 @@ public class ArrayStorage {
         }
     }
 
-
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         Resume r = null;
 
-        for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) {
-                r = storage[i];
+        if (!checkResumeExist(uuid)) {
+            r = new Resume();
+            r.uuid = "Резюме с таким uuid не существует";
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (storage[i].uuid.equals(uuid)) {
+                    r = storage[i];
+                }
             }
         }
         return r;
     }
 
-    void delete(String uuid) {
-        int cursor = 0;
-        for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) {
-                storage[i] = null;
-                cursor = i;
-                size--;
+    public void delete(String uuid) {
+        if (!checkResumeExist(uuid)) {
+            System.out.println("Резюме с таким uuid не существует");
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (storage[i].uuid.equals(uuid)) {
+                    storage[i] = storage[size - 1];
+                    storage[size - 1] = null;
+                    size--;
+                    break;
+                }
             }
-        }
-        for (int i = cursor+1; i <= size; i++) {
-            storage[i - 1] = storage[i];
-
         }
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         Resume[] resumes = new Resume[size];
-        for (int i = 0; i < size; i++) {
-            resumes[i] = storage[i];
-        }
+        System.arraycopy(storage, 0, resumes, 0, size);
         return resumes;
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 }
