@@ -8,6 +8,8 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import static org.junit.Assert.fail;
+
 public class AbstractArrayStorageTest {
 
     private Storage storage;
@@ -15,6 +17,7 @@ public class AbstractArrayStorageTest {
     public AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
     }
+
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
@@ -41,10 +44,7 @@ public class AbstractArrayStorageTest {
 
     @Test
     public void save() {
-        storage.clear();
-        storage.save(new Resume("uuid1"));
-        makeAssert(new Resume("uuid1"));
-
+        makeAssert(new Resume("uuid1"), new Resume("uuid2"), new Resume("uuid3"));
     }
 
     @Test
@@ -91,9 +91,10 @@ public class AbstractArrayStorageTest {
             storage.clear();
             for (int i = 0; i < 10000; i++) {
                 storage.save(new Resume());
+
             }
         } catch (StorageException e) {
-            Assert.fail();
+            fail();
         }
         storage.save(new Resume());
     }
