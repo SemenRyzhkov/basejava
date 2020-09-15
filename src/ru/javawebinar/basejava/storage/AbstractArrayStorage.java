@@ -1,13 +1,10 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     private static final int STORAGE_LIMIT = 10_000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -18,48 +15,33 @@ public abstract class AbstractArrayStorage implements Storage {
         size = 0;
     }
 
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            storage[index] = resume;
-            System.out.println("Резюме c uuid " + resume.getUuid() + " успешно обновлено");
-        }
+    public void resumeUpdate(Resume resume) {
+        storage[getIndex(resume.getUuid())] = resume;
+        System.out.println("Резюме c uuid " + resume.getUuid() + " успешно обновлено");
     }
 
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else if (size == STORAGE_LIMIT) {
-            throw new StorageException("Список заполнен", resume.getUuid());
-        } else {
-            saveResume(resume, index);
-            size++;
-        }
+    public void addResume(Resume resume) {
+        saveResume(resume, getIndex(resume.getUuid()));
+        size++;
     }
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return storage[index];
+    public Resume getResume(String uuid) {
+        return storage[getIndex(uuid)];
     }
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
+    public void removeResume(String uuid) {
+        deleteResume(getIndex(uuid));
+        storage[size - 1] = null;
+        size--;
+    }
 
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            deleteResume(index);
-            storage[size - 1] = null;
-            size--;
+    @Override
+    protected boolean sizeEquals() {
+        boolean trueSize = false;
+        if (size == STORAGE_LIMIT) {
+            trueSize = true;
         }
+        return trueSize;
     }
 
     /**
