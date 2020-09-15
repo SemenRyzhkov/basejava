@@ -6,7 +6,6 @@ import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-
     @Override
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
@@ -24,7 +23,7 @@ public abstract class AbstractStorage implements Storage {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
             throw new ExistStorageException(resume.getUuid());
-        } else addResume(resume, index);
+        } else addResume(resume, -index);
     }
 
     protected abstract void addResume(Resume resume, int index);
