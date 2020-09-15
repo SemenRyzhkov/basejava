@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,31 +24,24 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void addResume(Resume resume) {
-        resumeList.add(resume);
+    protected void addResume(Resume resume, int index) {
+        resumeList.add(index, resume);
     }
 
     @Override
-    protected boolean sizeEquals() {
-        return false;
+    protected Resume getResume(int index) {
+        return resumeList.get(index);
     }
 
     @Override
-    protected Resume getResume(String uuid) {
-        return resumeList.get(getIndex(uuid));
+    protected void removeResume(int index) {
+        resumeList.remove(index);
     }
 
     @Override
-    protected void removeResume(String uuid) {
-        resumeList.remove(getIndex(uuid));
-
+    public void resumeUpdate(Resume resume, int index) {
+        resumeList.set(index, resume);
     }
-
-    @Override
-    public void resumeUpdate(Resume resume) {
-        resumeList.set(getIndex(resume.getUuid()), resume);
-    }
-
 
     @Override
     public Resume[] getAll() {
