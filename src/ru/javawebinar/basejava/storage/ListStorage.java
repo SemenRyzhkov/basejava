@@ -15,10 +15,11 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected int getIndex(String uuid) {
-        int index = -1;
+        int index = 0;
         for (Resume resume : resumeList) {
-            if (resume.getUuid().equals(uuid))
+            if (resume.getUuid().equals(uuid)) {
                 index = resumeList.indexOf(resume);
+            } else index = -resumeList.indexOf(resume);
         }
         return index;
     }
