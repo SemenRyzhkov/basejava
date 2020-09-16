@@ -11,10 +11,10 @@ public abstract class AbstractStorage implements Storage {
         int index = getIndex(resume.getUuid());
         if (index < 0) {
             throw new NotExistStorageException(resume.getUuid());
-        } else resumeUpdate(resume, index);
+        } else updateResume(resume, index);
     }
 
-    protected abstract void resumeUpdate(Resume resume, int index);
+    protected abstract void updateResume(Resume resume, int index);
 
     protected abstract int getIndex(String uuid);
 

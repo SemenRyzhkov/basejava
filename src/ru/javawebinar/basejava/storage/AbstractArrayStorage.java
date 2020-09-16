@@ -16,7 +16,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    public void resumeUpdate(Resume resume, int index) {
+    public void updateResume(Resume resume, int index) {
         storage[index] = resume;
         System.out.println("Резюме c uuid " + resume.getUuid() + " успешно обновлено");
     }
