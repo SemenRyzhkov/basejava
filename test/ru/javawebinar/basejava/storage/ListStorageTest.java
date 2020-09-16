@@ -93,7 +93,7 @@ public class ListStorageTest {
     }
 
     public void makeAssert(Resume... expected) {
-        List<Resume>actualList = listStorage.resumeList;
+        List<Resume>actualList = Arrays.asList(listStorage.getAll());
         List<Resume>expectedList = Arrays.asList(expected);
         Assert.assertEquals(expectedList, actualList);
     }

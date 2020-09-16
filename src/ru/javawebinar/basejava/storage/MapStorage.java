@@ -5,7 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.*;
 
 public class MapStorage extends AbstractStorage {
-    protected Map<Integer, Resume> resumeMap = new HashMap<>();
+    private Map<Integer, Resume> resumeMap = new HashMap<>();
 
     @Override
     protected void updateResume(Resume resume, int index) {

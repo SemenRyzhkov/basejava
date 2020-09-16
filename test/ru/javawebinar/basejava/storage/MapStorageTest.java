@@ -96,10 +96,14 @@ public class MapStorageTest {
     }
 
     public void makeAssert(Resume... expected) {
-        Map<Integer, Resume> actualMap = mapStorage.resumeMap;
+        Resume[]actualArray =mapStorage.getAll();
+        Map<Integer, Resume> actualMap = new HashMap<>();
+        for (Resume resume : actualArray) {
+            actualMap.put(resume.getUuid().hashCode(), resume);
+        }
         Map<Integer, Resume> expectedMap = new HashMap<>();
-        for (int i = 0; i < expected.length; i++) {
-            expectedMap.put(expected[i].getUuid().hashCode(), expected[i]);
+        for (Resume resume : expected) {
+            expectedMap.put(resume.getUuid().hashCode(), resume);
         }
         Assert.assertEquals(expectedMap, actualMap);
     }
