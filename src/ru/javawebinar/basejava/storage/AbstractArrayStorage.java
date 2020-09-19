@@ -11,31 +11,39 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    protected abstract void saveResume(Resume resume, int index);
+
+    protected abstract void deleteResume(int index);
+    //возвращает true, значит резюме найдено
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return (Integer) searchKey>=0;
+    }
+
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    public void updateResume(Resume resume, int index) {
-        storage[index] = resume;
-        System.out.println("Резюме c uuid " + resume.getUuid() + " успешно обновлено");
+    public void updateResume(Resume resume, Object searchKey) {
+        storage[(Integer) searchKey] = resume;
     }
 
-    public void addResume(Resume resume, int index) {
+    public void addResume(Resume resume, Object searchKey) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Список заполнен", resume.getUuid());
         } else {
-            saveResume(resume, -index);
+            saveResume(resume,(Integer) searchKey);
             size++;
         }
     }
 
-    public Resume getResume(int index) {
-        return storage[index];
+    public Resume getResume(Object searchKey) {
+        return storage[(Integer)searchKey];
     }
 
-    public void removeResume(int index) {
-        deleteResume(index);
+    public void removeResume(Object searchKey) {
+        deleteResume((Integer)searchKey);
         storage[size - 1] = null;
         size--;
     }
@@ -52,8 +60,4 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     public int size() {
         return size;
     }
-
-    protected abstract void saveResume(Resume resume, int index);
-
-    protected abstract void deleteResume(int index);
 }

@@ -4,28 +4,37 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.*;
 
-public class MapStorage extends AbstractStorage {
-    private Map<String, Resume> resumeMap = new HashMap<>();
+public class MapStorage1 extends AbstractStorage {
+    private Map<Integer, Resume> resumeMap = new HashMap<>();
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return resumeMap.containsKey(searchKey);
+        return (Integer) searchKey >= 0;
     }
 
     @Override
-    protected String getSearchKey(String uuid) {
-        return uuid;
+    protected Integer getSearchKey(String uuid) {
+        int searchKey = uuid.hashCode();
+        if (resumeMap.size() == 0) {
+            return -searchKey;
+        } else {
+            for (Map.Entry<Integer, Resume> pair : resumeMap.entrySet()) {
+                if (pair.getKey() == searchKey) return searchKey;
+            }
+        }
+        return -searchKey;
     }
 
     @Override
     protected void updateResume(Resume resume, Object searchKey) {
-        resumeMap.put((String) searchKey, resume);
-
+        resumeMap.put((Integer) searchKey, resume);
+        System.out.println("Резюме c uuid " + resume.getUuid() + " успешно обновлено");
     }
+
 
     @Override
     protected void addResume(Resume resume, Object searchKey) {
-        resumeMap.put((String) searchKey, resume);
+        resumeMap.put((Integer) searchKey, resume);
     }
 
     @Override
@@ -45,7 +54,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        Map<String, Resume> treeMap = new TreeMap<>(resumeMap);
+        Map<Integer, Resume> treeMap = new TreeMap<>(resumeMap);
         List<Resume> resumes = new ArrayList<>(treeMap.values());
         return resumes.toArray(new Resume[0]);
     }
@@ -55,3 +64,4 @@ public class MapStorage extends AbstractStorage {
         return resumeMap.size();
     }
 }
+

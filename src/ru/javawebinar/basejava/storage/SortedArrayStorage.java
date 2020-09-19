@@ -5,9 +5,11 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
-
+//возвращает отрицательный индекс,  увеличенный на единицу, если резюме не найдено. Индекс поакзывает расположенте резюме в массиве,
+//если бы оно существовало
+//возвращает положительный индекс, если резюме найдено
     @Override
-    protected int getIndex(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);
         return Arrays.binarySearch(storage, 0, size, searchKey);

@@ -2,12 +2,11 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-/**
- * Array based storage for Resumes
- */
 public class ArrayStorage extends AbstractArrayStorage {
 
-    protected int getIndex(String uuid) {
+//    возвращает отрицательное число, если резюме с таким uuid не найдено
+//    возвращает индекс резюме в массиве, если оно найдено
+    protected Integer getSearchKey(String uuid) {
         int index = -1;
 
         for (int i = 0; i < size; i++) {
@@ -18,7 +17,7 @@ public class ArrayStorage extends AbstractArrayStorage {
         return index;
     }
 
-    protected void saveResume(Resume resume, int index) {
+    protected void saveResume(Resume resume, int searchKey) {
         storage[size] = resume;
     }
 
