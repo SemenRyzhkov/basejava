@@ -7,14 +7,14 @@ public class ArrayStorage extends AbstractArrayStorage {
 //    возвращает отрицательное число, если резюме с таким uuid не найдено
 //    возвращает индекс резюме в массиве, если оно найдено
     protected Integer getSearchKey(String uuid) {
-        int index = -1;
+        int searchKey = -1;
 
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                index = i;
+                searchKey = i;
             }
         }
-        return index;
+        return searchKey;
     }
 
     protected void saveResume(Resume resume, int searchKey) {
@@ -22,7 +22,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void deleteResume(int index) {
-        storage[index] = storage[size - 1];
+    protected void deleteResume(int searchKey) {
+        storage[searchKey] = storage[size - 1];
     }
 }

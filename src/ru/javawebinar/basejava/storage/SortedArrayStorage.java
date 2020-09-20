@@ -3,16 +3,24 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
-//возвращает отрицательный индекс,  увеличенный на единицу, если резюме не найдено. Индекс поакзывает расположенте резюме в массиве,
+    //возвращает отрицательный индекс,  увеличенный на единицу, если резюме не найдено. Индекс поакзывает расположенте резюме в массиве,
 //если бы оно существовало
 //возвращает положительный индекс, если резюме найдено
     @Override
     protected Integer getSearchKey(String uuid) {
-        Resume searchKey = new Resume();
+        Resume searchKey = new Resume(uuid, "fullName");
         searchKey.setUuid(uuid);
-        return Arrays.binarySearch(storage, 0, size, searchKey);
+        return Arrays.binarySearch(storage, 0, size, searchKey, new IdComparator());
+    }
+
+    class IdComparator implements Comparator<Resume>{
+        @Override
+        public int compare(Resume o1, Resume o2) {
+          return o1.getUuid().compareTo(o2.getUuid());
+        }
     }
 
     @Override
