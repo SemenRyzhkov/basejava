@@ -1,15 +1,26 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Initial resume class
  */
+
 public class Resume implements Comparable<Resume>{
     // Unique identifier
     private String uuid;
     private String fullName;
+    private TextSection personal;
+    private TextSection objective;
+    private TextSection achievement;
+    private TextSection qualifications;
+    private LinkSection experience;
+    private LinkSection education;
+
+    private List<SectionType>sectionTypes = new ArrayList<>();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -61,3 +72,4 @@ public class Resume implements Comparable<Resume>{
         return compare==0?uuid.compareTo(o.uuid):compare;
     }
 }
+
