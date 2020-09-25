@@ -2,12 +2,8 @@ package ru.javawebinar.basejava.model;
 
 import java.util.Objects;
 
-public class TextSection {
+public class TextSection extends Section{
     String text;
-
-    public TextSection(String text) {
-        this.text = text;
-    }
 
     public String getText() {
         return text;

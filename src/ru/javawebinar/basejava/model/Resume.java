@@ -1,26 +1,17 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
  */
 
-public class Resume implements Comparable<Resume>{
+public class Resume implements Comparable<Resume> {
     // Unique identifier
     private String uuid;
     private String fullName;
-    private TextSection personal;
-    private TextSection objective;
-    private TextSection achievement;
-    private TextSection qualifications;
-    private LinkSection experience;
-    private LinkSection education;
-
-    private List<SectionType>sectionTypes = new ArrayList<>();
+    private Map<SectionType, Section> sectionMap = new HashMap<>();
+    private Map<ContactType, String> contactMap = new HashMap<>();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -47,6 +38,22 @@ public class Resume implements Comparable<Resume>{
         this.uuid = uuid;
     }
 
+    public Map<SectionType, Section> getSectionMap() {
+        return sectionMap;
+    }
+
+    public void setSectionMap(Map<SectionType, Section> sectionMap) {
+        this.sectionMap = sectionMap;
+    }
+
+    public Map<ContactType, String> getContactMap() {
+        return contactMap;
+    }
+
+    public void setContactMap(Map<ContactType, String> contactMap) {
+        this.contactMap = contactMap;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,7 +76,7 @@ public class Resume implements Comparable<Resume>{
     @Override
     public int compareTo(Resume o) {
         int compare = fullName.compareTo(o.fullName);
-        return compare==0?uuid.compareTo(o.uuid):compare;
+        return compare == 0 ? uuid.compareTo(o.uuid) : compare;
     }
 }
 
