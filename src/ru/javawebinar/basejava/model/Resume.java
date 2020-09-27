@@ -10,8 +10,8 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private String uuid;
     private String fullName;
-    private Map<SectionType, Section> sectionMap = new HashMap<>();
-    private Map<ContactType, String> contactMap = new HashMap<>();
+    private Map<SectionType, List<AbstractSection>> sections = new EnumMap<>(SectionType.class);
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -38,20 +38,20 @@ public class Resume implements Comparable<Resume> {
         this.uuid = uuid;
     }
 
-    public Map<SectionType, Section> getSectionMap() {
-        return sectionMap;
+    public Map<SectionType, List<AbstractSection>> getSections() {
+        return sections;
     }
 
-    public void setSectionMap(Map<SectionType, Section> sectionMap) {
-        this.sectionMap = sectionMap;
+    public void setSections(Map<SectionType, List<AbstractSection>> sectionMap) {
+        this.sections = sectionMap;
     }
 
-    public Map<ContactType, String> getContactMap() {
-        return contactMap;
+    public Map<ContactType, String> getContacts() {
+        return contacts;
     }
 
-    public void setContactMap(Map<ContactType, String> contactMap) {
-        this.contactMap = contactMap;
+    public void setContacts(Map<ContactType, String> contactMap) {
+        this.contacts = contactMap;
     }
 
     @Override
@@ -60,12 +60,14 @@ public class Resume implements Comparable<Resume> {
         if (!(o instanceof Resume)) return false;
         Resume resume = (Resume) o;
         return Objects.equals(getUuid(), resume.getUuid()) &&
-                Objects.equals(getFullName(), resume.getFullName());
+                Objects.equals(getFullName(), resume.getFullName()) &&
+                Objects.equals(getSections(), resume.getSections()) &&
+                Objects.equals(getContacts(), resume.getContacts());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUuid(), getFullName());
+        return Objects.hash(getUuid(), getFullName(), getSections(), getContacts());
     }
 
     @Override

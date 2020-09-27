@@ -2,8 +2,8 @@ package ru.javawebinar.basejava.model;
 
 import java.util.Objects;
 
-public class TextSection extends Section{
-    String text;
+public class TextSection extends AbstractSection {
+    private String text;
 
     public String getText() {
         return text;
@@ -28,8 +28,6 @@ public class TextSection extends Section{
 
     @Override
     public String toString() {
-        return "TextSection{" +
-                "text='" + text + '\'' +
-                '}';
+        return text;
     }
 }

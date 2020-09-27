@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class TextListSection extends Section{
-    List<String>list;
+public class TextListSection extends AbstractSection {
+    private List<String> list;
 
     public TextListSection() {
         list = new ArrayList<>();
@@ -33,9 +33,8 @@ public class TextListSection extends Section{
     }
 
     @Override
+
     public String toString() {
-        return "TextSection{" +
-                "list=" + list +
-                '}';
+        return list.toString();
     }
 }
