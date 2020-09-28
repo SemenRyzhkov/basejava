@@ -24,12 +24,12 @@ public class TextListSection extends AbstractSection {
         if (this == o) return true;
         if (!(o instanceof TextListSection)) return false;
         TextListSection that = (TextListSection) o;
-        return Objects.equals(getList(), that.getList());
+        return Objects.equals(list, that.list);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getList());
+        return Objects.hash(list);
     }
 
     @Override

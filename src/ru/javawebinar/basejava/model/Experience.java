@@ -3,13 +3,13 @@ package ru.javawebinar.basejava.model;
 import java.time.YearMonth;
 import java.util.Objects;
 
-public class TextAndTimeSection extends AbstractSection {
+public class Experience extends AbstractSection {
     private String name;
     private String text;
     private YearMonth timeBegin;
     private YearMonth timeAnd;
 
-    public TextAndTimeSection(String name, YearMonth timeBegin, YearMonth timeAnd, String text) {
+    public Experience(String name, YearMonth timeBegin, YearMonth timeAnd, String text) {
         this.name = name;
         this.text = text;
         this.timeBegin = timeBegin;
@@ -51,17 +51,17 @@ public class TextAndTimeSection extends AbstractSection {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TextAndTimeSection)) return false;
-        TextAndTimeSection that = (TextAndTimeSection) o;
-        return Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getText(), that.getText()) &&
-                Objects.equals(getTimeBegin(), that.getTimeBegin()) &&
-                Objects.equals(getTimeAnd(), that.getTimeAnd());
+        if (!(o instanceof Experience)) return false;
+        Experience that = (Experience) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(text, that.text) &&
+                Objects.equals(timeBegin, that.timeBegin) &&
+                Objects.equals(timeAnd, that.timeAnd);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getText(), getTimeBegin(), getTimeAnd());
+        return Objects.hash(name, text, timeBegin, timeAnd);
     }
 
     @Override
