@@ -6,7 +6,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10_000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -18,8 +18,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     //возвращает true, значит резюме найдено
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (Integer) searchKey >= 0;
+    protected boolean isExist(Integer searchKey) {
+        return (searchKey) >= 0;
     }
 
     public void clear() {
@@ -27,25 +27,25 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    public void updateResume(Resume resume, Object searchKey) {
-        storage[(Integer) searchKey] = resume;
+    public void updateResume(Resume resume, Integer searchKey) {
+        storage[searchKey] = resume;
     }
 
-    public void addResume(Resume resume, Object searchKey) {
+    public void addResume(Resume resume, Integer searchKey) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Список заполнен", resume.getUuid());
         } else {
-            saveResume(resume, (Integer) searchKey);
+            saveResume(resume, searchKey);
             size++;
         }
     }
 
-    public Resume getResume(Object searchKey) {
-        return storage[(Integer) searchKey];
+    public Resume getResume(Integer searchKey) {
+        return storage[searchKey];
     }
 
-    public void removeResume(Object searchKey) {
-        deleteResume((Integer) searchKey);
+    public void removeResume(Integer searchKey) {
+        deleteResume(searchKey);
         storage[size - 1] = null;
         size--;
     }
