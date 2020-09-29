@@ -36,16 +36,16 @@ public class Resume implements Comparable<Resume> {
         return sections;
     }
 
-    public void setSections(Map<SectionType, AbstractSection> sectionMap) {
-        this.sections = sectionMap;
-    }
-
     public Map<ContactType, String> getContacts() {
         return contacts;
     }
 
-    public void setContacts(Map<ContactType, String> contactMap) {
-        this.contacts = contactMap;
+    public void setSections(Map<SectionType, AbstractSection> sections) {
+        this.sections = sections;
+    }
+
+    public void setContacts(Map<ContactType, String> contacts) {
+        this.contacts = contacts;
     }
 
     @Override

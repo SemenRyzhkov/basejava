@@ -1,22 +1,18 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class ExperienceList extends AbstractSection{
-    private List<Experience> experienceList;
+    private final List<Experience> experienceList;
 
-    public ExperienceList() {
-        experienceList = new ArrayList<>();
+    public ExperienceList(List<Experience>experienceList) {
+        Objects.requireNonNull(experienceList, "experienceList must not be null");
+        this.experienceList = experienceList;
     }
 
     public List<Experience> getExperienceList() {
         return experienceList;
-    }
-
-    public void setExperienceList(List<Experience> experienceList) {
-        this.experienceList = experienceList;
     }
 
     @Override
@@ -24,7 +20,7 @@ public class ExperienceList extends AbstractSection{
         if (this == o) return true;
         if (!(o instanceof ExperienceList)) return false;
         ExperienceList that = (ExperienceList) o;
-        return Objects.equals(experienceList, that.experienceList);
+        return experienceList.equals(that.experienceList);
     }
 
     @Override

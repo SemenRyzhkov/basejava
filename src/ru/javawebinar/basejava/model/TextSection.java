@@ -3,14 +3,15 @@ package ru.javawebinar.basejava.model;
 import java.util.Objects;
 
 public class TextSection extends AbstractSection {
-    private String text;
+    private final String content;
 
-    public String getText() {
-        return text;
+    public TextSection(String content) {
+        Objects.requireNonNull(content, "content must not be null");
+        this.content = content;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public String getContent() {
+        return content;
     }
 
     @Override
@@ -18,16 +19,16 @@ public class TextSection extends AbstractSection {
         if (this == o) return true;
         if (!(o instanceof TextSection)) return false;
         TextSection that = (TextSection) o;
-        return Objects.equals(text, that.text);
+        return content.equals(that.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(text);
+        return Objects.hash(content);
     }
 
     @Override
     public String toString() {
-        return text;
+        return content;
     }
 }

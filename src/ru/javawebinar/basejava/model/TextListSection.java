@@ -1,22 +1,18 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class TextListSection extends AbstractSection {
-    private List<String> list;
+    private final List<String> list;
 
-    public TextListSection() {
-        list = new ArrayList<>();
+    public TextListSection(List<String>list) {
+        Objects.requireNonNull(list, "list must not be null");
+        this.list = list;
     }
 
     public List<String> getList() {
         return list;
-    }
-
-    public void setList(List<String> list) {
-        this.list = list;
     }
 
     @Override
@@ -24,7 +20,7 @@ public class TextListSection extends AbstractSection {
         if (this == o) return true;
         if (!(o instanceof TextListSection)) return false;
         TextListSection that = (TextListSection) o;
-        return Objects.equals(list, that.list);
+        return list.equals(that.list);
     }
 
     @Override
@@ -33,7 +29,6 @@ public class TextListSection extends AbstractSection {
     }
 
     @Override
-
     public String toString() {
         return list.toString();
     }

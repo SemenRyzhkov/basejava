@@ -3,49 +3,22 @@ package ru.javawebinar.basejava.model;
 import java.time.YearMonth;
 import java.util.Objects;
 
-public class Experience extends AbstractSection {
-    private String name;
-    private String text;
-    private YearMonth timeBegin;
-    private YearMonth timeAnd;
+public class Experience {
+    private final Link homePage;
+    private final String title;
+    private final String description;
+    private final YearMonth startTime;
+    private final YearMonth endTime;
 
-    public Experience(String name, YearMonth timeBegin, YearMonth timeAnd, String text) {
-        this.name = name;
-        this.text = text;
-        this.timeBegin = timeBegin;
-        this.timeAnd = timeAnd;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public YearMonth getTimeBegin() {
-        return timeBegin;
-    }
-
-    public void setTimeBegin(YearMonth timeBegin) {
-        this.timeBegin = timeBegin;
-    }
-
-    public YearMonth getTimeAnd() {
-        return timeAnd;
-    }
-
-    public void setTimeAnd(YearMonth timeAnd) {
-        this.timeAnd = timeAnd;
+    public Experience(String name, String url, String title, YearMonth startTime, YearMonth endTime, String description) {
+        Objects.requireNonNull(startTime, "startTime must not be null");
+        Objects.requireNonNull(endTime, "endTime must not be null");
+        Objects.requireNonNull(title, "titleTime must not be null");
+        this.homePage = new Link(name, url);
+        this.title = title;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     @Override
@@ -53,19 +26,20 @@ public class Experience extends AbstractSection {
         if (this == o) return true;
         if (!(o instanceof Experience)) return false;
         Experience that = (Experience) o;
-        return Objects.equals(name, that.name) &&
-                Objects.equals(text, that.text) &&
-                Objects.equals(timeBegin, that.timeBegin) &&
-                Objects.equals(timeAnd, that.timeAnd);
+        return Objects.equals(homePage, that.homePage) &&
+                title.equals(that.title) &&
+                Objects.equals(description, that.description) &&
+                startTime.equals(that.startTime) &&
+                endTime.equals(that.endTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, text, timeBegin, timeAnd);
+        return Objects.hash(homePage, title, description, startTime, endTime);
     }
 
     @Override
     public String toString() {
-        return name + "\n" + timeBegin + " - " + timeAnd + "\t" + text + "\n";
+        return homePage +"\n" + title + '\'' + description + startTime + endTime;
     }
 }
