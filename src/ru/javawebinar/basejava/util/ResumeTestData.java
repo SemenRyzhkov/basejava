@@ -47,15 +47,13 @@ public class ResumeTestData {
         educationList.add(education);
         OrganizationListSection educationList1 = new OrganizationListSection(educationList);
 
-        Map<SectionType, AbstractSection> map = new EnumMap<>(SectionType.class);
-        map.put(SectionType.OBJECTIVE, objective);
-        map.put(SectionType.PERSONAL, personal);
-        map.put(SectionType.ACHIEVEMENT, achievement);
-        map.put(SectionType.QUALIFICATIONS, qualifications);
-        map.put(SectionType.EXPERIENCE, organizationListSection1);
-        map.put(SectionType.EDUCATION, educationList1);
 
-        resume.setSections(map);
+        resume.getSections().put(SectionType.OBJECTIVE, objective);
+        resume.getSections().put(SectionType.PERSONAL, personal);
+        resume.getSections().put(SectionType.ACHIEVEMENT, achievement);
+        resume.getSections().put(SectionType.QUALIFICATIONS, qualifications);
+        resume.getSections().put(SectionType.EXPERIENCE, organizationListSection1);
+        resume.getSections().put(SectionType.EDUCATION, educationList1);
 
 //        resume.getSections().values().stream().flatMap(Collection::stream).forEach(System.out::println);
         for (Map.Entry<SectionType, AbstractSection> pair : resume.getSections().entrySet()) {
@@ -65,18 +63,16 @@ public class ResumeTestData {
         System.out.println("-------------------------------");
 
         Map<ContactType, String> contactMap = new EnumMap<>(ContactType.class);
-        contactMap.put(ContactType.PHONE, "+7(921) 855-0482");
-        contactMap.put(ContactType.MAIL, "gkislin@yandex.ru");
-        contactMap.put(ContactType.SKYPE, "grigory.kislin");
-        contactMap.put(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        resume.setContacts(contactMap);
+        resume.getContacts().put(ContactType.PHONE, "+7(921) 855-0482");
+        resume.getContacts().put(ContactType.MAIL, "gkislin@yandex.ru");
+        resume.getContacts().put(ContactType.SKYPE, "grigory.kislin");
+        resume.getContacts().put(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
+
         for (Map.Entry<ContactType, String> pair : resume.getContacts().entrySet()) {
             System.out.println(pair.getKey().getTitle() + " " + pair.getValue());
         }
         return resume;
     }
-
-
 
     public static void main(String[] args) {
         Resume resume = new Resume("1", "Григорий Кислин");
@@ -119,15 +115,13 @@ public class ResumeTestData {
         educationList.add(education);
         OrganizationListSection educationList1 = new OrganizationListSection(educationList);
 
-        Map<SectionType, AbstractSection> map = new EnumMap<>(SectionType.class);
-        map.put(SectionType.OBJECTIVE, objective);
-        map.put(SectionType.PERSONAL, personal);
-        map.put(SectionType.ACHIEVEMENT, achievement);
-        map.put(SectionType.QUALIFICATIONS, qualifications);
-        map.put(SectionType.EXPERIENCE, organizationListSection1);
-        map.put(SectionType.EDUCATION, educationList1);
 
-        resume.setSections(map);
+        resume.getSections().put(SectionType.OBJECTIVE, objective);
+        resume.getSections().put(SectionType.PERSONAL, personal);
+        resume.getSections().put(SectionType.ACHIEVEMENT, achievement);
+        resume.getSections().put(SectionType.QUALIFICATIONS, qualifications);
+        resume.getSections().put(SectionType.EXPERIENCE, organizationListSection1);
+        resume.getSections().put(SectionType.EDUCATION, educationList1);
 
 //        resume.getSections().values().stream().flatMap(Collection::stream).forEach(System.out::println);
         for (Map.Entry<SectionType, AbstractSection> pair : resume.getSections().entrySet()) {
@@ -137,11 +131,11 @@ public class ResumeTestData {
         System.out.println("-------------------------------");
 
         Map<ContactType, String> contactMap = new EnumMap<>(ContactType.class);
-        contactMap.put(ContactType.PHONE, "+7(921) 855-0482");
-        contactMap.put(ContactType.MAIL, "gkislin@yandex.ru");
-        contactMap.put(ContactType.SKYPE, "grigory.kislin");
-        contactMap.put(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        resume.setContacts(contactMap);
+        resume.getContacts().put(ContactType.PHONE, "+7(921) 855-0482");
+        resume.getContacts().put(ContactType.MAIL, "gkislin@yandex.ru");
+        resume.getContacts().put(ContactType.SKYPE, "grigory.kislin");
+        resume.getContacts().put(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
+
         for (Map.Entry<ContactType, String> pair : resume.getContacts().entrySet()) {
             System.out.println(pair.getKey().getTitle() + " " + pair.getValue());
         }

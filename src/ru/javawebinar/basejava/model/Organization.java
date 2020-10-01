@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Organization {
     private final Link homePage;
-    private List<Experience> experienceList;
+    private final List<Experience> experienceList;
 
     public Organization(String name, String url, List<Experience> experienceStages) {
         Objects.requireNonNull(experienceStages, "experienceStagesList must not be null");
