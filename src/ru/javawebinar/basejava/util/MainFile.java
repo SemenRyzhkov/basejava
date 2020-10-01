@@ -35,13 +35,13 @@ public class MainFile {
 
     public void searchFile(File directory) throws IOException {
         File[] files = directory.listFiles();
-        for (File file : files) {
-            if (file.isDirectory())
-                searchFile(file);
-        }
-        for (File file : files) {
-            if (file.isFile())
-                System.out.println(file.getCanonicalPath());
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    searchFile(file);
+                } else if (file.isFile())
+                    System.out.println(file.getName());
+            }
         }
     }
 }

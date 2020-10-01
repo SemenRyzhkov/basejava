@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MapUuidStorage extends AbstractStorage<String> {
-    protected Map<String, Resume> resumeMap = new HashMap<>();
+    private Map<String, Resume> resumeMap = new HashMap<>();
 
     @Override
     protected boolean isExist(String searchKey) {
