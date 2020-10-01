@@ -47,7 +47,6 @@ public class ResumeTestData {
         educationList.add(education);
         OrganizationListSection educationList1 = new OrganizationListSection(educationList);
 
-
         resume.getSections().put(SectionType.OBJECTIVE, objective);
         resume.getSections().put(SectionType.PERSONAL, personal);
         resume.getSections().put(SectionType.ACHIEVEMENT, achievement);
@@ -55,22 +54,11 @@ public class ResumeTestData {
         resume.getSections().put(SectionType.EXPERIENCE, organizationListSection1);
         resume.getSections().put(SectionType.EDUCATION, educationList1);
 
-//        resume.getSections().values().stream().flatMap(Collection::stream).forEach(System.out::println);
-        for (Map.Entry<SectionType, AbstractSection> pair : resume.getSections().entrySet()) {
-            System.out.println(pair.getKey().getTitle() + "\n" + pair.getValue());
-        }
-
-        System.out.println("-------------------------------");
-
-        Map<ContactType, String> contactMap = new EnumMap<>(ContactType.class);
         resume.getContacts().put(ContactType.PHONE, "+7(921) 855-0482");
         resume.getContacts().put(ContactType.MAIL, "gkislin@yandex.ru");
         resume.getContacts().put(ContactType.SKYPE, "grigory.kislin");
         resume.getContacts().put(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
 
-        for (Map.Entry<ContactType, String> pair : resume.getContacts().entrySet()) {
-            System.out.println(pair.getKey().getTitle() + " " + pair.getValue());
-        }
         return resume;
     }
 
