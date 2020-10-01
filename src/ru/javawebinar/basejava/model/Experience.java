@@ -1,24 +1,24 @@
 package ru.javawebinar.basejava.model;
 
-import java.time.YearMonth;
+import java.util.List;
 import java.util.Objects;
 
 public class Experience {
     private final Link homePage;
-    private final String title;
-    private final String description;
-    private final YearMonth startTime;
-    private final YearMonth endTime;
+    private List<ExperienceStages> experienceStagesList;
 
-    public Experience(String name, String url, String title, YearMonth startTime, YearMonth endTime, String description) {
-        Objects.requireNonNull(startTime, "startTime must not be null");
-        Objects.requireNonNull(endTime, "endTime must not be null");
-        Objects.requireNonNull(title, "titleTime must not be null");
+    public Experience(String name, String url, List<ExperienceStages> experienceStages) {
+        Objects.requireNonNull(experienceStages, "experienceStagesList must not be null");
         this.homePage = new Link(name, url);
-        this.title = title;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.experienceStagesList = experienceStages;
+    }
+
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public List<ExperienceStages> getExperienceStages() {
+        return experienceStagesList;
     }
 
     @Override
@@ -26,20 +26,17 @@ public class Experience {
         if (this == o) return true;
         if (!(o instanceof Experience)) return false;
         Experience that = (Experience) o;
-        return Objects.equals(homePage, that.homePage) &&
-                title.equals(that.title) &&
-                Objects.equals(description, that.description) &&
-                startTime.equals(that.startTime) &&
-                endTime.equals(that.endTime);
+        return homePage.equals(that.homePage) &&
+                experienceStagesList.equals(that.experienceStagesList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(homePage, title, description, startTime, endTime);
+        return Objects.hash(homePage, experienceStagesList);
     }
 
     @Override
     public String toString() {
-        return homePage +"\n" + title + '\'' + description + startTime + endTime;
+        return homePage + "\n" + experienceStagesList;
     }
 }

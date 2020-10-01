@@ -1,4 +1,4 @@
-package ru.javawebinar.basejava;
+package ru.javawebinar.basejava.util;
 
 import ru.javawebinar.basejava.model.*;
 
@@ -6,6 +6,40 @@ import java.time.YearMonth;
 import java.util.*;
 
 public class ResumeTestData {
+
+    public Resume resumeTest(String uuid, String fullName, String objectiveText,
+                             String personalText, List<String> achievements, List<String> qualifications,
+                             String experienceName, String experienceUrl, List<ExperienceStages>experiences,
+                             String educationName, String educationUrl, List<ExperienceStages>educations){
+        Resume resume = new Resume(uuid, fullName);
+        TextSection objective = new TextSection(objectiveText);
+        TextSection personal = new TextSection(personalText);
+        TextListSection achievement = new TextListSection(achievements);
+        TextListSection qualification = new TextListSection(qualifications);
+        Experience experience = new Experience(experienceName, experienceUrl, experiences);
+        List<Experience>experienceList = new ArrayList<>();
+        ExperienceList exp = new ExperienceList(experienceList);
+        experienceList.add(experience);
+
+        Experience education = new Experience(educationName, educationUrl, educations);
+        List<Experience>educationList = new ArrayList<>();
+        ExperienceList edu = new ExperienceList(experienceList);
+
+        Map<SectionType, AbstractSection> map = new EnumMap<>(SectionType.class);
+        map.put(SectionType.OBJECTIVE, objective);
+        map.put(SectionType.PERSONAL, personal);
+        map.put(SectionType.ACHIEVEMENT, achievement);
+        map.put(SectionType.QUALIFICATIONS, qualification);
+        map.put(SectionType.EXPERIENCE, exp);
+        map.put(SectionType.EDUCATION, edu);
+
+        resume.setSections(map);
+
+        return resume;
+    }
+
+
+
     public static void main(String[] args) {
         Resume resume = new Resume("1", "Григорий Кислин");
 
@@ -29,16 +63,19 @@ public class ResumeTestData {
         qualificationsList.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,");
         TextListSection qualifications = new TextListSection(qualificationsList);
 
-
-        Experience experience = new Experience("Wrike", "url", "Старший разработчик (backend)", YearMonth.of(2014, 10), YearMonth.of(2016, 01),
-                "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
+        ExperienceStages experienceStages1 = new ExperienceStages(YearMonth.of(2014, 10), YearMonth.of(2016, 01), "Старший разработчик (backend)", "Старший разработчик (backend)");
+        List<ExperienceStages> list = new ArrayList<>();
+        list.add(experienceStages1);
+        Experience experience = new Experience("Wrike", "url", list);
         List<Experience> experienceList = new ArrayList<>();
         experienceList.add(experience);
         ExperienceList experienceList1 = new ExperienceList(experienceList);
 
-
-        Experience education = new Experience("Coursera", "url", "Functional Programming Principles in Scala\" by Martin Odersky", YearMonth.of(2013, 03), YearMonth.of(2011, 04), "");
-        List<Experience>educationList = new ArrayList<>();
+        ExperienceStages educationStages1 = new ExperienceStages(YearMonth.of(1993, 9), YearMonth.of(1996, 7), "Аспирантура (программист С, С++)", "");
+        ExperienceStages educationStages2 = new ExperienceStages(YearMonth.of(1987, 9), YearMonth.of(1993, 7), "Инженер (программист Fortran, C)", "");
+        List<ExperienceStages> list1 = new ArrayList<>();
+        Experience education = new Experience("Coursera", "url", list1);
+        List<Experience> educationList = new ArrayList<>();
         educationList.add(education);
         ExperienceList educationList1 = new ExperienceList(educationList);
 
