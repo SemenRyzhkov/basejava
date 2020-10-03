@@ -1,14 +1,17 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class OrganizationListSection extends AbstractSection{
+public class OrganizationListSection extends AbstractSection {
+    private static final long serialVersionUID = 1L;
+
     private final List<Organization> organizationList;
 
-    public OrganizationListSection(List<Organization> organizationList) {
+    public OrganizationListSection(Organization... organizationList) {
         Objects.requireNonNull(organizationList, "experienceList must not be null");
-        this.organizationList = organizationList;
+        this.organizationList = Arrays.asList(organizationList);
     }
 
     public List<Organization> getOrganizationList() {

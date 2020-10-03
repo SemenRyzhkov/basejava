@@ -1,12 +1,19 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class TextListSection extends AbstractSection {
+    private static final long serialVersionUID = 1L;
+
     private final List<String> list;
 
-    public TextListSection(List<String>list) {
+    public TextListSection(String... list) {
+        this(Arrays.asList(list));
+    }
+
+    public TextListSection(List<String> list) {
         Objects.requireNonNull(list, "list must not be null");
         this.list = list;
     }

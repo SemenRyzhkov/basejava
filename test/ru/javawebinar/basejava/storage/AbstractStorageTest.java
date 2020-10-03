@@ -7,13 +7,15 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.util.ResumeTestData;
 
+import java.io.File;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
+    protected static final File STORAGE_DIR = new File("C:\\Users\\semen\\basejava\\src\\ru\\javawebinar\\basejava\\storage1");
 
-    Storage storage;
+    protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -26,11 +28,10 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-        ResumeTestData resumeTestData = new ResumeTestData();
-        RESUME_1 = resumeTestData.resumeTest(UUID_1, "fullName1");
-        RESUME_2 = resumeTestData.resumeTest(UUID_2, "fullName2");
-        RESUME_3 = resumeTestData.resumeTest(UUID_3, "fullName3");
-        RESUME_4 = resumeTestData.resumeTest(UUID_4, "fullName4");
+        RESUME_1 = ResumeTestData.resumeTest(UUID_1, "fullName1");
+        RESUME_2 = ResumeTestData.resumeTest(UUID_2, "fullName2");
+        RESUME_3 = ResumeTestData.resumeTest(UUID_3, "fullName3");
+        RESUME_4 = ResumeTestData.resumeTest(UUID_4, "fullName4");
 
     }
 
@@ -47,32 +48,32 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void size(){
+    public void size() {
         assertSize(3);
     }
 
     @Test
-    public void clear(){
+    public void clear() {
         storage.clear();
         assertSize(0);
     }
 
     @Test
-    public void update(){
-        Resume newResume = new Resume(UUID_1, "newName");
+    public void update() {
+        Resume newResume = ResumeTestData.resumeTest(UUID_1, "newName");
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_1));
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void updateNotExist(){
+    public void updateNotExist() {
         storage.get("dummy");
     }
 
     @Test
     public void getAllSorted() {
-        List<Resume>actual = storage.getAllSorted();
-        List<Resume>expected = List.of(RESUME_1, RESUME_2, RESUME_3);
+        List<Resume> actual = storage.getAllSorted();
+        List<Resume> expected = List.of(RESUME_1, RESUME_2, RESUME_3);
         assertEquals(3, actual.size());
         assertEquals(expected, actual);
     }
