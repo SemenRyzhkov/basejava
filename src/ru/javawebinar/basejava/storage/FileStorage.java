@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private File directory;
+    private  IOSerializeStrategy serializeStrategy = new IOSerializeStrategy();
 
-    protected AbstractFileStorage(File directory) {
+    protected FileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -35,7 +36,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void updateResume(Resume resume, File file) {
         try {
-            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+           serializeStrategy.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Couldn't write file", file.getName(), e);
         }
@@ -51,20 +52,20 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         updateResume(resume, file);
     }
 
-    protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
+//    protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
 
     @Override
     protected Resume getResume(File file) {
         Resume resume = null;
         try {
-            resume = doRead(new BufferedInputStream(new FileInputStream(file)));
+            resume = serializeStrategy.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Couldn't read file", file.getName(), e);
         }
         return resume;
     }
 
-    protected abstract Resume doRead(InputStream is) throws IOException;
+//    protected abstract Resume doRead(InputStream is) throws IOException;
 
     @Override
     protected void removeResume(File file) {
@@ -78,7 +79,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         List<Resume> result = new ArrayList<>();
         for (File file : searchFile(directory)) {
             try {
-                result.add(doRead(new BufferedInputStream(new FileInputStream(file))));
+                result.add(serializeStrategy.doRead(new BufferedInputStream(new FileInputStream(file))));
             } catch (IOException e) {
                 throw new StorageException("Couldn't read list of file", file.getName(), e);
             }

@@ -1,9 +1,10 @@
 package ru.javawebinar.basejava.storage;
 
-//public class ObjectStreamStorage extends FileStorage {
-//    public ObjectStreamStorage(File directory){
+//public class ObjectStreamPathStorage extends AbstractPathStorage{
+//    public ObjectStreamPathStorage(String directory){
 //        super(directory);
 //    }
+//
 //
 //    protected void doWrite(Resume resume, OutputStream os) throws IOException {
 //        try (ObjectOutputStream oos = new ObjectOutputStream(os)) {

@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = new File("C:\\Users\\semen\\basejava\\src\\ru\\javawebinar\\basejava\\storage1");
+    protected static final String STORAGE_DIR1 = "C:\\Users\\semen\\basejava\\src\\ru\\javawebinar\\basejava\\storage2";
 
     protected Storage storage;
 
@@ -32,7 +33,6 @@ public abstract class AbstractStorageTest {
         RESUME_2 = ResumeTestData.resumeTest(UUID_2, "fullName2");
         RESUME_3 = ResumeTestData.resumeTest(UUID_3, "fullName3");
         RESUME_4 = ResumeTestData.resumeTest(UUID_4, "fullName4");
-
     }
 
     protected AbstractStorageTest(Storage storage) {

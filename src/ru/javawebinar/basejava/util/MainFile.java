@@ -30,17 +30,18 @@ public class MainFile {
 //        }
 
         MainFile mainFile = new MainFile();
-        mainFile.searchFile(dir);
+        mainFile.searchFile(dir, "");
     }
 
-    public void searchFile(File directory) throws IOException {
+    public void searchFile(File directory, String counter) throws IOException {
         File[] files = directory.listFiles();
         if (files != null) {
             for (File file : files) {
+                System.out.println(counter + " " + file.getName());
                 if (file.isDirectory()) {
-                    searchFile(file);
-                } else if (file.isFile())
-                    System.out.println(file.getName());
+                    counter += "-";
+                    searchFile(file, counter);
+                }
             }
         }
     }
