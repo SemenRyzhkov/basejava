@@ -2,19 +2,20 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.strategy.SerializeStrategy;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
-    private  IOSerializeStrategy strategy = new IOSerializeStrategy();
+    private SerializeStrategy strategy;
 
     protected PathStorage(String directoryName) {
         directory = Paths.get(directoryName);
@@ -24,6 +25,10 @@ public class PathStorage extends AbstractStorage<Path> {
         }
     }
 
+    public void setSerializeStrategy(SerializeStrategy strategy) {
+        this.strategy = strategy;
+    }
+
     @Override
     protected boolean isExist(Path path) {
         return Files.exists(path);
@@ -31,13 +36,15 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return directory.resolve(uuid) ;
+        return directory.resolve(uuid);
     }
 
     @Override
     protected void updateResume(Resume resume, Path path) {
         try {
-            strategy.doWrite(resume, new BufferedOutputStream(new FileOutputStream(String.valueOf(path))));
+            ByteArrayOutputStream ba = new ByteArrayOutputStream();
+            strategy.doWrite(resume, ba);
+            Files.write(path, ba.toByteArray());
         } catch (IOException e) {
             throw new StorageException("Couldn't write file", path.getFileName().toString(), e);
         }
@@ -57,13 +64,12 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Resume getResume(Path path) {
-        Resume resume = null;
         try {
-            resume = strategy.doRead(new BufferedInputStream(new FileInputStream(String.valueOf(path))));
+            ByteArrayInputStream is = new ByteArrayInputStream(Files.readAllBytes(path));
+            return strategy.doRead(is);
         } catch (IOException e) {
             throw new StorageException("Couldn't read file", path.getFileName().toString(), e);
         }
-        return resume;
     }
 
 //    protected abstract Resume doRead(InputStream is) throws IOException;
@@ -79,26 +85,31 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getList() {
-        List<Resume> result = new ArrayList<>();
-        try {
-            result = Files.list(directory).map(this::getResume).collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
+        return getPathStream().map(this::getResume).collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::removeResume);
-        } catch (IOException e) {
-            throw new StorageException("Files delete error", null);
-        }
+        getPathStream().forEach(this::removeResume);
     }
 
     @Override
     public int size() {
         return getList().size();
     }
+
+    public Stream<Path> getPathStream() {
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("Directory read error", null);
+        }
+    }
 }
+
+
+
+
+
+
+

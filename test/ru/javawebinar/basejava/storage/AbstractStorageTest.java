@@ -13,10 +13,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
-    protected static final File STORAGE_DIR = new File("C:\\Users\\semen\\basejava\\src\\ru\\javawebinar\\basejava\\storage1");
-    protected static final String STORAGE_DIR1 = "C:\\Users\\semen\\basejava\\src\\ru\\javawebinar\\basejava\\storage2";
-
+    protected static final File STORAGE_DIR = new File(
+            "C:\\Users\\semen\\basejava\\src\\ru\\javawebinar\\basejava\\storage1");
     protected Storage storage;
+    PathStorage pathStorage =  new PathStorage(String.valueOf(STORAGE_DIR));
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
