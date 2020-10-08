@@ -37,10 +37,11 @@ public class MainFile {
         File[] files = directory.listFiles();
         if (files != null) {
             for (File file : files) {
-                System.out.println(counter + " " + file.getName());
-                if (file.isDirectory()) {
-                    counter += "-";
-                    searchFile(file, counter);
+                if (file.isFile()) {
+                    System.out.println(counter + "File: " + file.getName());
+                } else if (file.isDirectory()) {
+                    System.out.println(counter + "Directory: " + file.getName());
+                    searchFile(file, counter + "-");
                 }
             }
         }
