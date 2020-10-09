@@ -25,10 +25,6 @@ public class FileStorage extends AbstractStorage<File> {
         this.serializeStrategy = serializeStrategy;
     }
 
-    public void setSerializeStrategy(SerializeStrategy serializeStrategy) {
-        this.serializeStrategy = serializeStrategy;
-    }
-
     @Override
     protected boolean isExist(File file) {
         return file.exists();
@@ -103,10 +99,10 @@ public class FileStorage extends AbstractStorage<File> {
         return walksFileTree(directory).length;
     }
 
-    public File[] walksFileTree(File directory) {
+    private File[] walksFileTree(File directory) {
         File[] files = directory.listFiles();
         if (files == null) {
-            throw new StorageException("Directory read error", null);
+            throw new StorageException("Directory read error");
         }
         return files;
     }

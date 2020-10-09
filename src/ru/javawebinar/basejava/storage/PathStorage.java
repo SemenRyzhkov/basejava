@@ -45,7 +45,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             strategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("Couldn't write file", path.getFileName().toString(), e);
+            throw new StorageException("Couldn't write file", getFileName(path), e);
         }
     }
 
@@ -54,23 +54,19 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("Couldn't create file", path.getFileName().toString(), e);
+            throw new StorageException("Couldn't create file", getFileName(path), e);
         }
         updateResume(resume, path);
     }
-
-//    protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
 
     @Override
     protected Resume getResume(Path path) {
         try {
             return strategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("Couldn't read file", path.getFileName().toString(), e);
+            throw new StorageException("Couldn't read file", getFileName(path), e);
         }
     }
-
-//    protected abstract Resume doRead(InputStream is) throws IOException;
 
     @Override
     protected void removeResume(Path path) {
@@ -93,14 +89,18 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        return getList().size();
+        return (int) getPathStream().count();
     }
 
-    public Stream<Path> getPathStream() {
+    private String getFileName(Path path) {
+        return path.getFileName().toString();
+    }
+
+    private Stream<Path> getPathStream() {
         try {
             return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("Directory read error", null, e);
+            throw new StorageException("Directory read error", e);
         }
     }
 }

@@ -1,13 +1,19 @@
 package ru.javawebinar.basejava.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OrganizationListSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
-    private final List<Organization> organizationList;
+    private List<Organization> organizationList;
+
+    public OrganizationListSection() {
+    }
 
     public OrganizationListSection(Organization... organizationList) {
         Objects.requireNonNull(organizationList, "experienceList must not be null");
