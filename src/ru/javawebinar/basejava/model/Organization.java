@@ -92,6 +92,22 @@ public class Organization implements Serializable{
             this.endTime = endTime;
         }
 
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public LocalDate getStartTime() {
+            return startTime;
+        }
+
+        public LocalDate getEndTime() {
+            return endTime;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
