@@ -20,6 +20,10 @@ public class OrganizationListSection extends AbstractSection {
         this.organizationList = Arrays.asList(organizationList);
     }
 
+    public OrganizationListSection(List<Organization> organizationList) {
+        this.organizationList = organizationList;
+    }
+
     public List<Organization> getOrganizationList() {
         return organizationList;
     }
