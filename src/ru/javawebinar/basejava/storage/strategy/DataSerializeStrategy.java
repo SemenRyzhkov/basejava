@@ -24,33 +24,6 @@ public class DataSerializeStrategy implements SerializeStrategy {
             Map<SectionType, AbstractSection> sectionMap = resume.getSections();
             int size1 = sectionMap.size();
             dos.writeInt(size1);
-//            for (Map.Entry<SectionType, AbstractSection> pair : sectionMap.entrySet()) {
-//                dos.writeUTF(pair.getKey().name());
-//                AbstractSection abstractSection = pair.getValue();
-//                if (abstractSection instanceof TextSection) {
-//                    dos.writeUTF(((TextSection) pair.getValue()).getContent());
-//                } else if (abstractSection instanceof TextListSection) {
-//                    List<String> list = ((TextListSection) abstractSection).getList();
-//                    for (String str : list) {
-//                        dos.writeUTF(str);
-//                    }
-//                } else if (abstractSection instanceof OrganizationListSection) {
-//                    List<Organization> organizations = ((OrganizationListSection) abstractSection)
-//                            .getOrganizationList();
-//                    for (Organization e : organizations) {
-//                        dos.writeUTF(e.getHomePage().getName());
-//                        dos.writeUTF(e.getHomePage().getUrl());
-//                        List<Organization.Experience> experiences = e.getExperienceList();
-//                        for (Organization.Experience exp : experiences) {
-//                            dos.writeUTF(exp.getTitle());
-//                            dos.writeUTF(exp.getDescription());
-//                            dos.writeUTF(exp.getStartTime().toString());
-//                            dos.writeUTF(exp.getEndTime().toString());
-//                        }
-//                    }
-//                }
-//            }
-
             for (Map.Entry<SectionType, AbstractSection> pair : sectionMap.entrySet()) {
                 if (pair.getKey().equals(SectionType.PERSONAL) || pair.getKey().equals(SectionType.OBJECTIVE)) {
                     dos.writeUTF(pair.getKey().name());
@@ -141,6 +114,7 @@ public class DataSerializeStrategy implements SerializeStrategy {
                             orgList.add(new Organization(new Link(name, url), expList));
                         }
                         resume.addSection(section, new OrganizationListSection(orgList));
+                        break;
                 }
             }
             return resume;
