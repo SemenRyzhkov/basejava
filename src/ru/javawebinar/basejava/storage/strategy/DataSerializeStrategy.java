@@ -4,9 +4,7 @@ import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataSerializeStrategy implements SerializeStrategy {
     @Override
@@ -16,49 +14,91 @@ public class DataSerializeStrategy implements SerializeStrategy {
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
             dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> pair : contacts.entrySet()) {
-                dos.writeUTF(pair.getKey().name());
-                dos.writeUTF(pair.getValue());
-            }
+//            for (Map.Entry<ContactType, String> pair : contacts.entrySet()) {
+//                dos.writeUTF(pair.getKey().name());
+//                dos.writeUTF(pair.getValue());
+//            }
+            writeWithException(contacts, (k, v) ->
+            {
+                dos.writeUTF(k.name());
+                dos.writeUTF(v);
+            });
 
             Map<SectionType, AbstractSection> sectionMap = resume.getSections();
-            int size1 = sectionMap.size();
-            dos.writeInt(size1);
-            for (Map.Entry<SectionType, AbstractSection> pair : sectionMap.entrySet()) {
-                if (pair.getKey().equals(SectionType.PERSONAL) || pair.getKey().equals(SectionType.OBJECTIVE)) {
-                    dos.writeUTF(pair.getKey().name());
-                    dos.writeUTF(((TextSection) pair.getValue()).getContent());
-                } else if (pair.getKey().equals(SectionType.ACHIEVEMENT) || pair.getKey().equals(SectionType.QUALIFICATIONS)) {
-                    dos.writeUTF(pair.getKey().name());
-                    List<String> list = ((TextListSection) pair.getValue()).getList();
-                    int listSize = list.size();
-                    dos.writeInt(listSize);
-                    for (String str : list) {
-                        dos.writeUTF(str);
+            dos.writeInt(sectionMap.size());
+            writeWithException(sectionMap, (k, v) ->
+            {
+                switch (k) {
+                    case PERSONAL, OBJECTIVE -> {
+                        dos.writeUTF(k.name());
+                        dos.writeUTF(((TextSection) v).getContent());
                     }
-                } else if (pair.getKey().equals(SectionType.EXPERIENCE) || pair.getKey().equals(SectionType.EDUCATION)) {
-                    dos.writeUTF(pair.getKey().name());
-                    List<Organization> organizations = ((OrganizationListSection) pair.getValue())
-                            .getOrganizationList();
-                    int orgSize = organizations.size();
-                    dos.writeInt(orgSize);
-                    for (Organization e : organizations) {
-                        dos.writeUTF(e.getHomePage().getName());
-                        dos.writeUTF(e.getHomePage().getUrl());
-                        List<Organization.Experience> experiences = e.getExperienceList();
-                        int exSize = experiences.size();
-                        dos.writeInt(exSize);
-                        for (Organization.Experience exp : experiences) {
-                            dos.writeUTF(exp.getStartTime().toString());
-                            dos.writeUTF(exp.getEndTime().toString());
-                            dos.writeUTF(exp.getTitle());
-                            if (exp.getDescription() != null) {
-                                dos.writeUTF(exp.getDescription());
-                            }else dos.writeUTF("null");
-                        }
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        dos.writeUTF(k.name());
+                        List<String> list = ((TextListSection) v).getList();
+                        dos.writeInt(list.size());
+                        writeWithException(list, dos::writeUTF);
+                    }
+                    case EXPERIENCE, EDUCATION -> {
+                        dos.writeUTF(k.name());
+                        List<Organization> orgList = ((OrganizationListSection) v).getOrganizationList();
+                        dos.writeInt(orgList.size());
+                        writeWithException(orgList, e ->
+                        {
+                            dos.writeUTF(e.getHomePage().getName());
+                            dos.writeUTF(e.getHomePage().getUrl());
+                            List<Organization.Experience> expList = e.getExperienceList();
+                            dos.writeInt(expList.size());
+                            writeWithException(expList, x -> {
+                                        dos.writeUTF(x.getStartTime().toString());
+                                        dos.writeUTF(x.getEndTime().toString());
+                                        dos.writeUTF(x.getTitle());
+                                        if (x.getDescription() != null) {
+                                            dos.writeUTF(x.getDescription());
+                                        } else dos.writeUTF("null");
+                                    }
+                            );
+                        });
                     }
                 }
-            }
+            });
+//            for (Map.Entry<SectionType, AbstractSection> pair : sectionMap.entrySet()) {
+//                SectionType sectionType = pair.getKey();
+//                switch (sectionType) {
+//                    case PERSONAL, OBJECTIVE -> {
+//                        dos.writeUTF(pair.getKey().name());
+//                        dos.writeUTF(((TextSection) pair.getValue()).getContent());
+//                    }
+//                    case ACHIEVEMENT, QUALIFICATIONS -> {
+//                        dos.writeUTF(pair.getKey().name());
+//                        List<String> list = ((TextListSection) pair.getValue()).getList();
+//                        dos.writeInt(list.size());
+//                        for (String str : list) {
+//                            dos.writeUTF(str);
+//                        }
+//                    }
+//                    case EXPERIENCE, EDUCATION -> {
+//                        dos.writeUTF(pair.getKey().name());
+//                        List<Organization> organizations = ((OrganizationListSection) pair.getValue())
+//                                .getOrganizationList();
+//                        dos.writeInt(organizations.size());
+//                        for (Organization e : organizations) {
+//                            dos.writeUTF(e.getHomePage().getName());
+//                            dos.writeUTF(e.getHomePage().getUrl());
+//                            List<Organization.Experience> experiences = e.getExperienceList();
+//                            dos.writeInt(experiences.size());
+//                            for (Organization.Experience exp : experiences) {
+//                                dos.writeUTF(exp.getStartTime().toString());
+//                                dos.writeUTF(exp.getEndTime().toString());
+//                                dos.writeUTF(exp.getTitle());
+//                                if (exp.getDescription() != null) {
+//                                    dos.writeUTF(exp.getDescription());
+//                                } else dos.writeUTF("null");
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
@@ -68,37 +108,32 @@ public class DataSerializeStrategy implements SerializeStrategy {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
+            int contactSize = dis.readInt();
+            for (int i = 0; i < contactSize; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            int size1 = dis.readInt();
-            for (int i = 0; i < size1; i++) {
-                SectionType section = SectionType.valueOf(dis.readUTF());
-                switch (section) {
-                    case PERSONAL:
-                    case OBJECTIVE:
-                        resume.addSection(section, new TextSection(dis.readUTF()));
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
+            int sectionSize = dis.readInt();
+            for (int i = 0; i < sectionSize; i++) {
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                switch (sectionType) {
+                    case PERSONAL, OBJECTIVE -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
                         List<String> textList = new ArrayList<>();
-                        int listSize = dis.readInt();
-                        for (int j = 0; j < listSize; j++) {
+                        int textListSize = dis.readInt();
+                        for (int j = 0; j < textListSize; j++) {
                             textList.add(dis.readUTF());
                         }
-                        resume.addSection(section, new TextListSection(textList));
-                        break;
-                    case EXPERIENCE:
-                    case EDUCATION:
+                        resume.addSection(sectionType, new TextListSection(textList));
+                    }
+                    case EXPERIENCE, EDUCATION -> {
                         int orgSize = dis.readInt();
                         List<Organization> orgList = new ArrayList<>();
                         for (int j = 0; j < orgSize; j++) {
                             String name = dis.readUTF();
                             String url = dis.readUTF();
                             List<Organization.Experience> expList = new ArrayList<>();
-                            int exSize = dis.readInt();
-                            for (int k = 0; k < exSize; k++) {
+                            int expListSize = dis.readInt();
+                            for (int k = 0; k < expListSize; k++) {
                                 LocalDate startDate = LocalDate.parse(dis.readUTF());
                                 LocalDate endDate = LocalDate.parse(dis.readUTF());
                                 String title = dis.readUTF();
@@ -113,11 +148,36 @@ public class DataSerializeStrategy implements SerializeStrategy {
                             }
                             orgList.add(new Organization(new Link(name, url), expList));
                         }
-                        resume.addSection(section, new OrganizationListSection(orgList));
-                        break;
+                        resume.addSection(sectionType, new OrganizationListSection(orgList));
+                    }
                 }
             }
             return resume;
         }
     }
+
+    private static <T> void writeWithException(Collection<T> collection,
+                                               SerializeConsumer<T> consumer) throws IOException {
+        Objects.requireNonNull(consumer);
+        for (T t : collection) {
+            consumer.accept(t);
+        }
+    }
+
+    private static <K, V> void writeWithException(Map<K, V> map,
+                                                  BiSerializeConsumer<K, V> consumer) throws IOException {
+        Objects.requireNonNull(consumer);
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            K k;
+            V v;
+            try {
+                k = entry.getKey();
+                v = entry.getValue();
+            } catch (IllegalStateException ise) {
+                throw new ConcurrentModificationException(ise);
+            }
+            consumer.accept(k, v);
+        }
+    }
 }
+
