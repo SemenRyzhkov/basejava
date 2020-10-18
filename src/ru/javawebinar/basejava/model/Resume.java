@@ -72,15 +72,15 @@ public class Resume implements Comparable<Resume>, Serializable {
         if (this == o) return true;
         if (!(o instanceof Resume)) return false;
         Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid) &&
-                Objects.equals(fullName, resume.fullName) &&
-                Objects.equals(sections, resume.sections) &&
-                Objects.equals(contacts, resume.contacts);
+        return getUuid().equals(resume.getUuid()) &&
+                getFullName().equals(resume.getFullName()) &&
+                getSections().equals(resume.getSections()) &&
+                getContacts().equals(resume.getContacts());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName, sections, contacts);
+        return Objects.hash(getUuid(), getFullName(), getSections(), getContacts());
     }
 
     @Override

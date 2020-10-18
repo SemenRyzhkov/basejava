@@ -13,30 +13,28 @@ public class DataSerializeStrategy implements SerializeStrategy {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> pair : contacts.entrySet()) {
-                dos.writeUTF(pair.getKey().name());
-                dos.writeUTF(pair.getValue());
-            }
+            writeWithException(contacts.entrySet(), dos, c->{
+                dos.writeUTF(c.getKey().name());
+                dos.writeUTF(c.getValue());
+            });
 
             Map<SectionType, AbstractSection> sectionMap = resume.getSections();
-            dos.writeInt(sectionMap.size());
-            for (Map.Entry<SectionType, AbstractSection> pair : sectionMap.entrySet()) {
-                SectionType sectionType = pair.getKey();
+            writeWithException(sectionMap.entrySet(), dos, s->{
+                SectionType sectionType = s.getKey();
 
                 switch (sectionType) {
                     case PERSONAL, OBJECTIVE -> {
-                        dos.writeUTF(pair.getKey().name());
-                        dos.writeUTF(((TextSection) pair.getValue()).getContent());
+                        dos.writeUTF(s.getKey().name());
+                        dos.writeUTF(((TextSection) s.getValue()).getContent());
                     }
                     case ACHIEVEMENT, QUALIFICATIONS -> {
-                        dos.writeUTF(pair.getKey().name());
-                        List<String> list = ((TextListSection) pair.getValue()).getList();
+                        dos.writeUTF(s.getKey().name());
+                        List<String> list = ((TextListSection) s.getValue()).getList();
                         writeWithException(list, dos, dos::writeUTF);
                     }
                     case EXPERIENCE, EDUCATION -> {
-                        dos.writeUTF(pair.getKey().name());
-                        List<Organization> orgList = ((OrganizationListSection) pair.getValue()).getOrganizationList();
+                        dos.writeUTF(s.getKey().name());
+                        List<Organization> orgList = ((OrganizationListSection) s.getValue()).getOrganizationList();
                         writeWithException(orgList, dos, e ->
                         {
                             dos.writeUTF(e.getHomePage().getName());
@@ -54,7 +52,7 @@ public class DataSerializeStrategy implements SerializeStrategy {
                         });
                     }
                 }
-            }
+            });
         }
     }
 
