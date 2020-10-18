@@ -13,13 +13,13 @@ public class DataSerializeStrategy implements SerializeStrategy {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
-            writeWithException(contacts.entrySet(), dos, c->{
+            writeWithException(contacts.entrySet(), dos, c -> {
                 dos.writeUTF(c.getKey().name());
                 dos.writeUTF(c.getValue());
             });
 
             Map<SectionType, AbstractSection> sectionMap = resume.getSections();
-            writeWithException(sectionMap.entrySet(), dos, s->{
+            writeWithException(sectionMap.entrySet(), dos, s -> {
                 SectionType sectionType = s.getKey();
 
                 switch (sectionType) {
@@ -38,15 +38,13 @@ public class DataSerializeStrategy implements SerializeStrategy {
                         writeWithException(orgList, dos, e ->
                         {
                             dos.writeUTF(e.getHomePage().getName());
-                            dos.writeUTF(e.getHomePage().getUrl());
+                            dos.writeUTF(e.getHomePage().getUrl() != null ? e.getHomePage().getUrl() : "null");
                             List<Organization.Experience> expList = e.getExperienceList();
                             writeWithException(expList, dos, x -> {
                                         dos.writeUTF(x.getStartTime().toString());
                                         dos.writeUTF(x.getEndTime().toString());
                                         dos.writeUTF(x.getTitle());
-                                        if (x.getDescription() != null) {
-                                            dos.writeUTF(x.getDescription());
-                                        } else dos.writeUTF("null");
+                                        dos.writeUTF(x.getDescription() != null ? x.getDescription() : "null");
                                     }
                             );
                         });
@@ -92,15 +90,13 @@ public class DataSerializeStrategy implements SerializeStrategy {
                                 LocalDate endDate = LocalDate.parse(dis.readUTF());
                                 String title = dis.readUTF();
                                 String descr = dis.readUTF();
-                                if (descr.equals("null"))
-                                    descr = null;
                                 expList.add(new Organization.Experience(
                                         startDate,
                                         endDate,
                                         title,
-                                        descr));
+                                        descr.equals("null") ? null : descr));
                             }
-                            orgList.add(new Organization(new Link(name, url), expList));
+                            orgList.add(new Organization(new Link(name, url.equals("null") ? null : url), expList));
                         }
                         resume.addSection(sectionType, new OrganizationListSection(orgList));
                     }
