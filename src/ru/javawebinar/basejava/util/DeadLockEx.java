@@ -5,9 +5,8 @@ public class DeadLockEx {
     public static final Object LOCK2 = new Object();
 
     public static void main(String[] args) {
-        Thread1 thread1 = new Thread1();
-        thread1.start();
-        lock(LOCK1, LOCK2);
+        new Thread(()->lock(LOCK2, LOCK1)).start();
+        new Thread(()->lock(LOCK1, LOCK2)).start();
     }
 
     public static void lock(Object lock1, Object lock2){
@@ -19,11 +18,5 @@ public class DeadLockEx {
                 System.out.println("Мониторы " + lock1 + lock2 + " захвачены");
             }
         }
-    }
-}
-
-class Thread1 extends Thread{
-    public void run(){
-        DeadLockEx.lock(DeadLockEx.LOCK2, DeadLockEx.LOCK1);
     }
 }
