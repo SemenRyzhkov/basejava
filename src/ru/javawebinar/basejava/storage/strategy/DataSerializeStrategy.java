@@ -114,7 +114,7 @@ public class DataSerializeStrategy implements SerializeStrategy {
         }
     }
 
-    private static <T> void readWithException(DataInputStream dis,
+    private static void readWithException(DataInputStream dis,
                                               SerializeReader reader) throws IOException {
         Objects.requireNonNull(reader);
         int size = dis.readInt();
