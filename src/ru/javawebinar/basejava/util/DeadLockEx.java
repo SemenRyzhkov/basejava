@@ -19,7 +19,7 @@ class Thread1 extends Thread{
             System.out.println("Thread1: монитор LOCK1 захвачен");
             System.out.println("Thread1: попытка захватить монитор LOCK2");
             synchronized (DeadLockEx.LOCK2){
-                System.out.println("Thread1: мониторы LOCK2 и LOCK1 захвачен");
+                System.out.println("Thread1: мониторы LOCK2 и LOCK1 захвачены");
             }
         }
     }
@@ -32,7 +32,7 @@ class Thread2 extends Thread{
             System.out.println("Thread2: монитор LOCK2 захвачен");
             System.out.println("Thread2: попытка захватить монитор LOCK1");
             synchronized (DeadLockEx.LOCK1){
-                System.out.println("Thread2: мониторы LOCK1 и LOCK1 захвачен");
+                System.out.println("Thread2: мониторы LOCK1 и LOCK1 захвачены");
             }
         }
     }
