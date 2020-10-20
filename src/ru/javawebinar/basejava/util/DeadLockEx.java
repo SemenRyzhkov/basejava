@@ -6,34 +6,24 @@ public class DeadLockEx {
 
     public static void main(String[] args) {
         Thread1 thread1 = new Thread1();
-        Thread2 thread2 = new Thread2();
         thread1.start();
-        thread2.start();
+        lock(LOCK1, LOCK2);
+    }
+
+    public static void lock(Object lock1, Object lock2){
+        System.out.println("Попытка захватить монитор " + lock1);
+        synchronized (lock1){
+            System.out.println("Монитор " + lock1 + " захвачен");
+            System.out.println("Попытка захватить монитор " + lock2);
+            synchronized (lock2){
+                System.out.println("Мониторы " + lock1 + lock2 + " захвачены");
+            }
+        }
     }
 }
 
 class Thread1 extends Thread{
     public void run(){
-        System.out.println("Thread1: попытка захватить монитор LOCK1");
-        synchronized (DeadLockEx.LOCK1){
-            System.out.println("Thread1: монитор LOCK1 захвачен");
-            System.out.println("Thread1: попытка захватить монитор LOCK2");
-            synchronized (DeadLockEx.LOCK2){
-                System.out.println("Thread1: мониторы LOCK2 и LOCK1 захвачены");
-            }
-        }
-    }
-}
-
-class Thread2 extends Thread{
-    public void run(){
-        System.out.println("Thread2: попытка захватить монитор LOCK2");
-        synchronized (DeadLockEx.LOCK2){
-            System.out.println("Thread2: монитор LOCK2 захвачен");
-            System.out.println("Thread2: попытка захватить монитор LOCK1");
-            synchronized (DeadLockEx.LOCK1){
-                System.out.println("Thread2: мониторы LOCK1 и LOCK2 захвачены");
-            }
-        }
+        DeadLockEx.lock(DeadLockEx.LOCK2, DeadLockEx.LOCK1);
     }
 }
