@@ -1,4 +1,4 @@
-package ru.javawebinar.basejava.util;
+package ru.javawebinar.basejava;
 
 public class MainConcurrency {
     private static int counter;

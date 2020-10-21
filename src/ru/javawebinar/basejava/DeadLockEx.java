@@ -1,4 +1,4 @@
-package ru.javawebinar.basejava.util;
+package ru.javawebinar.basejava;
 
 public class DeadLockEx {
     public static final Object LOCK1 = new Object();
