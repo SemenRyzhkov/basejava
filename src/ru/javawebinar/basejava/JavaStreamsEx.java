@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 public class JavaStreamsEx {
     public static void main(String[] args) {
+
         int[] array = {8, 1, 2, 3, 3, 2, 3, 7};
         System.out.println(minValue(array));
 

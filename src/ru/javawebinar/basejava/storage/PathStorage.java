@@ -26,10 +26,6 @@ public class PathStorage extends AbstractStorage<Path> {
         this.strategy = serializeStrategy;
     }
 
-    public void setSerializeStrategy(SerializeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
     @Override
     protected boolean isExist(Path path) {
         return Files.exists(path);
