@@ -2,7 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.javawebinar.basejava.Config;
+import ru.javawebinar.basejava.util.Config;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
@@ -65,7 +65,8 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() {
-        storage.get("dummy");
+        Resume newResume = new Resume("UUID_5", "New Name");
+        storage.update(newResume);
     }
 
     @Test

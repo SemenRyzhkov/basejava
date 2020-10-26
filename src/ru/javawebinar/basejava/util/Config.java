@@ -1,4 +1,7 @@
-package ru.javawebinar.basejava;
+package ru.javawebinar.basejava.util;
+
+import ru.javawebinar.basejava.sql.SqlHelper;
+import ru.javawebinar.basejava.storage.SqlStorage;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,9 +15,10 @@ public class Config {
     private static final Config INSTANCE = new Config();
     private Properties props = new Properties();
     private File storageDir;
-    private String dbUrl;
-    private String dbUser;
-    private String dbPassword;
+    private static String dbUrl;
+    private static String dbUser;
+    private static String dbPassword;
+    private static final SqlStorage sqlStorage = new SqlStorage(new SqlHelper(dbUrl, dbUser, dbPassword));
 
     public static Config getINSTANCE() {
         return INSTANCE;
@@ -47,5 +51,9 @@ public class Config {
 
     public String getDbPassword() {
         return dbPassword;
+    }
+
+    public SqlStorage getSqlStorage() {
+        return sqlStorage;
     }
 }
