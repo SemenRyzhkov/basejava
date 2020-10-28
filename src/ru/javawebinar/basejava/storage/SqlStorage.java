@@ -10,10 +10,6 @@ import java.util.List;
 
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
-    private Resume resume;
-    private final List<Resume> resumeList = new ArrayList<>();
-    private int count;
-
 
     public SqlStorage(SqlHelper sqlHelper) {
         this.sqlHelper = sqlHelper;
@@ -21,69 +17,75 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlHelper.execute(PreparedStatement::execute, "DELETE FROM resume");
+        sqlHelper.execute("DELETE FROM resume", (PreparedStatement ps) -> {
+            ps.execute();
+            return null;
+        });
     }
 
     @Override
     public void update(Resume r) {
-        sqlHelper.execute(ps -> {
+        sqlHelper.execute("UPDATE resume SET full_name=? WHERE uuid=?", ps -> {
             ps.setString(1, r.getFullName());
             ps.setString(2, r.getUuid());
             if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException(r.getUuid());
             }
-        }, "UPDATE resume set full_name=? where uuid=?");
+            return null;
+        });
     }
 
     @Override
     public void save(Resume r) {
-        sqlHelper.execute(ps -> {
+        sqlHelper.execute("INSERT INTO resume VALUES (?, ?)", ps -> {
             ps.setString(1, r.getUuid());
             ps.setString(2, r.getFullName());
-            ps.executeUpdate();
-        }, "INSERT INTO resume VALUES (?, ?)");
+            ps.execute();
+            return null;
+        });
     }
 
     @Override
     public Resume get(String uuid) {
-        sqlHelper.execute(ps -> {
+        return sqlHelper.execute("SELECT * FROM resume r WHERE r.uuid = ?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
                 throw new NotExistStorageException(uuid);
             }
-            resume = new Resume(uuid, rs.getString("full_name"));
-        }, "SELECT * FROM resume r WHERE r.uuid = ?");
-        return resume;
+            return new Resume(uuid, rs.getString("full_name"));
+        });
     }
 
     @Override
     public void delete(String uuid) {
-        sqlHelper.execute(ps->{
+        sqlHelper.execute("DELETE FROM resume WHERE uuid=?", ps -> {
             ps.setString(1, uuid);
-            if (ps.executeUpdate() == 0) throw new NotExistStorageException(uuid);
-        }, "DELETE FROM resume WHERE uuid=?");
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException(uuid);
+            }
+            return null;
+        });
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        sqlHelper.execute(ps->{
+        List<Resume> resumeList = new ArrayList<>();
+        return sqlHelper.execute("SELECT * FROM resume ORDER BY full_name", ps -> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                resumeList.add(new Resume(rs.getString("uuid").trim(), rs.getString("full_name")));
+                resumeList.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
             }
-        }, "SELECT * FROM resume");
-        return resumeList;
+            return resumeList;
+        });
     }
 
     @Override
     public int size() {
-        sqlHelper.execute(ps->{
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                count = rs.getInt(1);
-            }
-        }, "SELECT count(*) FROM resume");
-        return count;
+        return sqlHelper.execute("SELECT count(*) FROM resume", ps -> {
+                    ResultSet rs = ps.executeQuery();
+                    return rs.next() ? rs.getInt(1) : 0;
+                }
+        );
     }
 }

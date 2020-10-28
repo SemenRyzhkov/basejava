@@ -13,8 +13,7 @@ public class Config {
     protected static final File PROPS = new File(
             "config\\resumes.properties");
     private static final Config INSTANCE = new Config();
-    private Properties props = new Properties();
-    private File storageDir;
+    private final File storageDir;
     private static String dbUrl;
     private static String dbUser;
     private static String dbPassword;
@@ -26,6 +25,7 @@ public class Config {
 
     private Config() {
         try (InputStream is = new FileInputStream(PROPS)) {
+            Properties props = new Properties();
             props.load(is);
             storageDir = new File(props.getProperty("storage.dir"));
             dbUrl = props.getProperty("db.url");

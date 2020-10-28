@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class SqlHelper {
     private final ConnectionFactory connectionFactory;
 
-    public SqlHelper(String dbUrl, String dbUser, String dbPassword){
+    public SqlHelper(String dbUrl, String dbUser, String dbPassword) {
         connectionFactory = () -> DriverManager.getConnection(
                 dbUrl,
                 dbUser,
@@ -19,15 +19,17 @@ public class SqlHelper {
         );
     }
 
-    public void execute(SqlExecutor sqlExecutor, String query){
+    public <T> T execute(String query, SqlExecutor<T> sqlExecutor) {
+        T returnValue = null;
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
-             sqlExecutor.execute(ps);
+            returnValue = sqlExecutor.doExecute(ps);
         } catch (SQLException e) {
-            if (e.getSQLState().equals("23505")){
+            if (e.getSQLState().equals("23505")) {
                 throw new ExistStorageException(e);
             }
             throw new StorageException(e);
         }
+        return returnValue;
     }
 }
