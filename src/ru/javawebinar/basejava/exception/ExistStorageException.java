@@ -6,6 +6,6 @@ public class ExistStorageException extends StorageException{
     }
 
     public ExistStorageException(Exception e) {
-        super(e.getMessage());
+        this(e.getMessage());
     }
 }
