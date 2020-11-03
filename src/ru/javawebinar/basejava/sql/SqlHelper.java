@@ -1,11 +1,11 @@
 package ru.javawebinar.basejava.sql;
 
+import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
+import ru.javawebinar.basejava.model.Resume;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.Map;
 
 public class SqlHelper {
     private final ConnectionFactory connectionFactory;
@@ -47,4 +47,30 @@ public class SqlHelper {
             throw new StorageException(e);
         }
     }
+
+    public void getEditor(String query, String uuid, Resume resume, Connection conn, SqlEditor editor) throws SQLException{
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new NotExistStorageException(uuid);
+            }
+            resume.setUuid(uuid);
+            resume.setFullName(rs.getString("full_name"));
+            do {
+                editor.edit(rs, resume);
+            } while (rs.next());
+        }
+    }
+
+    public void getAllSortedEditor(String query, Connection conn, Map<String, Resume> map, SqlEditor editor) throws SQLException{
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String uuid = rs.getString("resume_uuid");
+                editor.edit(rs, map.get(uuid));
+            }
+        }
+    }
+
 }
