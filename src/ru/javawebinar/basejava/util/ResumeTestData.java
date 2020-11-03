@@ -1,16 +1,15 @@
 package ru.javawebinar.basejava.util;
 
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.*;
 
 public class ResumeTestData {
 
     public static Resume resumeTest(String uuid, String fullName){
         Resume resume = new Resume(uuid, fullName);
-//        resume.addSection(SectionType.PERSONAL, new TextSection("Personal1"));
-//        resume.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
-//        resume.addSection(SectionType.ACHIEVEMENT, new TextListSection("Achievement 1", "Achievement 2", "Achievement 3"));
-//        resume.addSection(SectionType.QUALIFICATIONS, new TextListSection("Qualifications 1", "Qualifications 2", "Qualifications 3"));
+        resume.addSection(SectionType.PERSONAL, new TextSection("Personal1"));
+        resume.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+        resume.addSection(SectionType.ACHIEVEMENT, new TextListSection("Achievement 1", "Achievement 2", "Achievement 3"));
+        resume.addSection(SectionType.QUALIFICATIONS, new TextListSection("Qualifications 1", "Qualifications 2", "Qualifications 3"));
 //        resume.addSection(SectionType.EXPERIENCE,
 //                new OrganizationListSection(
 //                        new Organization("Organization1", "url1",
@@ -35,8 +34,14 @@ public class ResumeTestData {
 
     public static Resume resumeTest1(String uuid, String fullName){
         Resume resume = new Resume(uuid, fullName);
+        resume.addSection(SectionType.PERSONAL, new TextSection("Personal2"));
+        resume.addSection(SectionType.OBJECTIVE, new TextSection("Objective2"));
+        resume.addSection(SectionType.ACHIEVEMENT, new TextListSection("Achievement new", "Achievement new1"));
+        resume.addSection(SectionType.QUALIFICATIONS, new TextListSection(
+                "Qualifications new", "Qualifications new1", "Qualifications new2", "Qualifications new3"));
         resume.addContact(ContactType.PHONE, "333-33-33");
         resume.addContact(ContactType.SKYPE, "skype987");
+
         return resume;
     }
 

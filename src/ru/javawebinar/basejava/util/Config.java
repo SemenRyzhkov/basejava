@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class Config {
     protected static final File PROPS = new File(
-            "config\\resumes.properties");
+            "\\Users\\semen\\basejava\\config\\resumes.properties");
     private static final Config INSTANCE = new Config();
     private final File storageDir;
     private final SqlStorage sqlStorage;
@@ -40,4 +40,6 @@ public class Config {
     public SqlStorage getSqlStorage() {
         return sqlStorage;
     }
+
+
 }
