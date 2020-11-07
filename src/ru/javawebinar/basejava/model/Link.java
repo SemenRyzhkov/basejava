@@ -47,4 +47,8 @@ public class Link implements Serializable {
     public String toString() {
         return "Link(" + name + ',' + url + ')';
     }
+
+    public String toLink() {
+        return (url == null) ? name : "<a href='" + url + "'>" + name + "</a>";
+    }
 }

@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +17,7 @@ import static ru.javawebinar.basejava.util.DateUtil.NOW;
 import static ru.javawebinar.basejava.util.DateUtil.of;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Organization implements Serializable{
+public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Link homePage;
@@ -25,7 +26,7 @@ public class Organization implements Serializable{
     public Organization() {
     }
 
-    public Organization(String name, String url, Experience... experiences){
+    public Organization(String name, String url, Experience... experiences) {
         this(new Link(name, url), Arrays.asList(experiences));
     }
 
@@ -69,16 +70,16 @@ public class Organization implements Serializable{
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate startTime;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
-        private LocalDate  endTime;
+        private LocalDate endTime;
 
         public Experience() {
         }
 
-        public Experience(int startYear, Month startMonth, String tittle, String description){
+        public Experience(int startYear, Month startMonth, String tittle, String description) {
             this(of(startYear, startMonth), NOW, tittle, description);
         }
 
-        public Experience(int startYear, Month startMonth, int endYear, Month endMonth, String title, String description){
+        public Experience(int startYear, Month startMonth, int endYear, Month endMonth, String title, String description) {
             this(of(startYear, startMonth), of(endYear, endMonth), title, description);
         }
 
@@ -127,6 +128,13 @@ public class Organization implements Serializable{
         @Override
         public String toString() {
             return startTime.toString() + " - " + endTime + title + "\n" + description;
+        }
+
+        public String toDate() {
+            DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d.MM.yy");
+            String start = startTime.format(formatters);
+            String end = endTime.format(formatters);
+            return (endTime.equals(NOW)) ? start + " по  настоящее время" : start + " - " + end;
         }
     }
 }
