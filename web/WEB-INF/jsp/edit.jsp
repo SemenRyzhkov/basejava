@@ -1,4 +1,5 @@
-<%@ page import="ru.javawebinar.basejava.model.ContactType" %>
+<%@ page import="java.util.List" %>
+<%@ page import="ru.javawebinar.basejava.model.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -26,10 +27,53 @@
                 <dd><input type="text" name="${type.name()}" size=30 value="${resume.getContact(type)}"></dd>
             </dl>
         </c:forEach>
+
         <h3>Секции:</h3>
-        <input type="text" name="section" size=30 value="1"><br/>
-        <input type="text" name="section" size=30 value="2"><br/>
-        <input type="text" name="section" size=30 value="3"><br/>
+        <c:forEach var="sectionEntry" items="${resume.sections}">
+            <jsp:useBean id="sectionEntry"
+                         type="java.util.Map.Entry<ru.javawebinar.basejava.model.SectionType,
+                         ru.javawebinar.basejava.model.AbstractSection>"/>
+            <c:set var="section" value="${sectionEntry.key}"/>
+            <c:set var="sectionValue" value="${sectionEntry.value}"/>
+            <c:choose>
+                <c:when test="${section == SectionType.OBJECTIVE || section == SectionType.PERSONAL}">
+                    <%
+                        String text = ((TextSection) sectionEntry.getValue()).getContent();
+                        request.setAttribute("text", text);
+                    %>
+                    <dl>
+                        <dt>${section.title}</dt>
+                        <dd><input type="text" name="${section.name()}" size=30 value="${text}"></dd>
+                    </dl>
+                </c:when>
+                <c:when test="${section == SectionType.ACHIEVEMENT}">
+                    <dl>
+                        <dt>${section.title}</dt>
+                        <li><dd><input type="text" name="textA" onfocus="this.value=''" size=30 value=""> </dd></li>
+                        <%
+                            List<String> list = ((TextListSection) sectionEntry.getValue()).getList();
+                            request.setAttribute("listA", list);
+                        %>
+                        <c:forEach var="achieve" items="${listA}">
+                            <li><dd><input type="text" name="textA" size=30 value="${achieve}"></dd></li>
+                        </c:forEach>
+                    </dl>
+                </c:when>
+                <c:when test="${section == SectionType.QUALIFICATIONS}">
+                    <dl>
+                        <dt>${section.title}</dt>
+                        <li><dd><input type="text" name="textQ" onfocus="this.value=''" size=30 value=""> </dd></li>
+                        <%
+                            List<String> list = ((TextListSection) sectionEntry.getValue()).getList();
+                            request.setAttribute("listQ", list);
+                        %>
+                        <c:forEach var="qua" items="${listQ}">
+                            <li><dd><input type="text" name="textQ" size=30 value="${qua}"></dd></li>
+                        </c:forEach>
+                    </dl>
+                </c:when>
+            </c:choose>
+        </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
         <button onclick="window.history.back()">Отменить</button>
