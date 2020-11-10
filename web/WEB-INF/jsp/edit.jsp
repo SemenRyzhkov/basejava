@@ -1,5 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="ru.javawebinar.basejava.model.*" %>
+<%@ page import="ru.javawebinar.basejava.model.SectionType" %>
+<%@ page import="java.time.LocalDate" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -29,46 +31,64 @@
         </c:forEach>
 
         <h3>Секции:</h3>
-        <c:forEach var="sectionEntry" items="${resume.sections}">
-            <jsp:useBean id="sectionEntry"
-                         type="java.util.Map.Entry<ru.javawebinar.basejava.model.SectionType,
-                         ru.javawebinar.basejava.model.AbstractSection>"/>
-            <c:set var="section" value="${sectionEntry.key}"/>
-            <c:set var="sectionValue" value="${sectionEntry.value}"/>
+
+        <c:forEach var="sectionType" items="${SectionType.values()}">
+            <jsp:useBean id="sectionType" type="ru.javawebinar.basejava.model.SectionType"/>
             <c:choose>
-                <c:when test="${section == SectionType.OBJECTIVE || section == SectionType.PERSONAL}">
+                <c:when test="${sectionType == SectionType.OBJECTIVE || sectionType == SectionType.PERSONAL}">
                     <%
-                        String text = ((TextSection) sectionEntry.getValue()).getContent();
+                        TextSection textSection = (TextSection) resume.getSection(sectionType);
+                        String text;
+                        if (textSection == null) {
+                            text = "";
+                        } else text = textSection.getContent();
                         request.setAttribute("text", text);
                     %>
                     <dl>
-                        <dt>${section.title}</dt>
-                        <dd><input type="text" name="${section.name()}" size=30 value="${text}"></dd>
+                        <dt>${sectionType.title}</dt>
+                        <dd><textarea rows="3" name="${sectionType.name()}" cols="30" name="text">${text}</textarea>
+                        </dd>
                     </dl>
                 </c:when>
-                <c:when test="${section == SectionType.ACHIEVEMENT}">
+                <c:when test="${sectionType == SectionType.ACHIEVEMENT}">
                     <dl>
-                        <dt>${section.title}</dt>
-                        <li><dd><input type="text" name="textA" onfocus="this.value=''" size=30 value=""> </dd></li>
+                        <dt>${sectionType.title}</dt>
                         <%
-                            List<String> list = ((TextListSection) sectionEntry.getValue()).getList();
-                            request.setAttribute("listA", list);
+                            TextListSection sectA = (TextListSection) resume.getSection(sectionType);
+                            if (sectA == null) {
+                                String s = "";
+                                request.setAttribute("textNull", s);
+                            } else {
+                                List<String> listA = sectA.getList();
+                                request.setAttribute("listA", listA);
+                            }
                         %>
-                        <c:forEach var="achieve" items="${listA}">
-                            <li><dd><input type="text" name="textA" size=30 value="${achieve}"></dd></li>
+                        <dd><input type="text" name="textA" size=30 value="${textNull}"></dd>
+                        <c:forEach var="ach" items="${listA}">
+                            <li>
+                                <dd><input type="text" name="textA" size=30 value="${ach}"></dd>
+                            </li>
                         </c:forEach>
                     </dl>
                 </c:when>
-                <c:when test="${section == SectionType.QUALIFICATIONS}">
+                <c:when test="${sectionType == SectionType.QUALIFICATIONS}">
                     <dl>
-                        <dt>${section.title}</dt>
-                        <li><dd><input type="text" name="textQ" onfocus="this.value=''" size=30 value=""> </dd></li>
+                        <dt>${sectionType.title}</dt>
                         <%
-                            List<String> list = ((TextListSection) sectionEntry.getValue()).getList();
-                            request.setAttribute("listQ", list);
+                            TextListSection sectQ = (TextListSection) resume.getSection(sectionType);
+                            if (sectQ == null) {
+                                String s = "";
+                                request.setAttribute("textNull", s);
+                            } else {
+                                List<String> listQ = sectQ.getList();
+                                request.setAttribute("listQ", listQ);
+                            }
                         %>
+                        <dd><input type="text" name="textQ" size=30 value="${textNull}"></dd>
                         <c:forEach var="qua" items="${listQ}">
-                            <li><dd><input type="text" name="textQ" size=30 value="${qua}"></dd></li>
+                            <li>
+                                <dd><input type="text" name="textQ" size=30 value="${qua}"></dd>
+                            </li>
                         </c:forEach>
                     </dl>
                 </c:when>

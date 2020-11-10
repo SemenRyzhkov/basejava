@@ -81,11 +81,13 @@ public class ResumeServlet extends HttpServlet {
         String[] values = request.getParameterValues(value);
         List<String> textList = ((TextListSection) r.getSection(type)).getList();
         textList.clear();
-        for (String v : values) {
-            if (v != null && v.trim().length() != 0) {
-                textList.add(v);
+        if (values != null) {
+            for (String v : values) {
+                if (v != null && v.trim().length() != 0) {
+                    textList.add(v);
+                }
             }
-        }
+        } else  r.getSections().remove(type);
 //        r.addSection(type, new TextListSection(textList));
     }
 }
