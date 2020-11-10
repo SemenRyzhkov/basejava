@@ -50,46 +50,24 @@
                         </dd>
                     </dl>
                 </c:when>
-                <c:when test="${sectionType == SectionType.ACHIEVEMENT}">
+                <c:when test="${sectionType == SectionType.ACHIEVEMENT || sectionType == SectionType.QUALIFICATIONS}">
                     <dl>
                         <dt>${sectionType.title}</dt>
                         <%
-                            TextListSection sectA = (TextListSection) resume.getSection(sectionType);
-                            if (sectA == null) {
+                            TextListSection sect = (TextListSection) resume.getSection(sectionType);
+                            if (sect != null) {
+                                List<String> list = sect.getList();
+                                request.setAttribute("list", list);
+                            } else {
                                 String s = "";
                                 request.setAttribute("textNull", s);
-                            } else {
-                                List<String> listA = sectA.getList();
-                                request.setAttribute("listA", listA);
                             }
                         %>
-                        <dd><input type="text" name="textA" size=30 value="${textNull}"></dd>
-                        <c:forEach var="ach" items="${listA}">
-                            <li>
-                                <dd><input type="text" name="textA" size=30 value="${ach}"></dd>
-                            </li>
-                        </c:forEach>
-                    </dl>
-                </c:when>
-                <c:when test="${sectionType == SectionType.QUALIFICATIONS}">
-                    <dl>
-                        <dt>${sectionType.title}</dt>
-                        <%
-                            TextListSection sectQ = (TextListSection) resume.getSection(sectionType);
-                            if (sectQ == null) {
-                                String s = "";
-                                request.setAttribute("textNull", s);
-                            } else {
-                                List<String> listQ = sectQ.getList();
-                                request.setAttribute("listQ", listQ);
-                            }
-                        %>
-                        <dd><input type="text" name="textQ" size=30 value="${textNull}"></dd>
-                        <c:forEach var="qua" items="${listQ}">
-                            <li>
-                                <dd><input type="text" name="textQ" size=30 value="${qua}"></dd>
-                            </li>
-                        </c:forEach>
+                        <textarea autofocus name="${sectionType.name()}" rows="10" cols="90">
+                        <c:forEach var="str" items="${list}">
+                            ${str}
+                            <%="\n"%>
+                        </c:forEach></textarea>
                     </dl>
                 </c:when>
             </c:choose>

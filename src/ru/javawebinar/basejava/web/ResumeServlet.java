@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
@@ -44,8 +45,22 @@ public class ResumeServlet extends HttpServlet {
                         r.getSections().remove(type);
                     }
                 }
-                case ACHIEVEMENT -> addTextListSection(request, "textA", type, r);
-                case QUALIFICATIONS -> addTextListSection(request, "textQ", type, r);
+                case ACHIEVEMENT, QUALIFICATIONS -> {
+                    String[] result = request.getParameter(type.name()).split("\n");
+                    List<String> list = new ArrayList<>();
+                    if (result.length != 0) {
+                        for (String s : result) {
+                            if (s != null && s.trim().length() != 0) {
+                                list.add(s);
+                            }
+                        }
+                        r.addSection(type, new TextListSection(list));
+                    } else {
+                        r.getSections().remove(type);
+                    }
+
+//                case QUALIFICATIONS -> addTextListSection(request, "textQ", type, r);
+                }
             }
         }
 
@@ -87,7 +102,7 @@ public class ResumeServlet extends HttpServlet {
                     textList.add(v);
                 }
             }
-        } else  r.getSections().remove(type);
+        } else r.getSections().remove(type);
 //        r.addSection(type, new TextListSection(textList));
     }
 }
