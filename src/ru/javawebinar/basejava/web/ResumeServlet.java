@@ -58,8 +58,6 @@ public class ResumeServlet extends HttpServlet {
                     } else {
                         r.getSections().remove(type);
                     }
-
-//                case QUALIFICATIONS -> addTextListSection(request, "textQ", type, r);
                 }
             }
         }
@@ -90,20 +88,6 @@ public class ResumeServlet extends HttpServlet {
         request.setAttribute("resume", r);
         request.getRequestDispatcher("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
                 .forward(request, response);
-    }
-
-    private void addTextListSection(HttpServletRequest request, String value, SectionType type, Resume r) {
-        String[] values = request.getParameterValues(value);
-        List<String> textList = ((TextListSection) r.getSection(type)).getList();
-        textList.clear();
-        if (values != null) {
-            for (String v : values) {
-                if (v != null && v.trim().length() != 0) {
-                    textList.add(v);
-                }
-            }
-        } else r.getSections().remove(type);
-//        r.addSection(type, new TextListSection(textList));
     }
 }
 
