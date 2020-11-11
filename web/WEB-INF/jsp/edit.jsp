@@ -56,9 +56,7 @@
                         <%
                             TextListSection sect = (TextListSection) resume.getSection(sectionType);
                             if (sect != null) {
-                                List<String> list = sect.getList();
-                                String[] result = new String[list.size()];
-                                String s = String.join("\n", list.toArray(result));
+                                String s = String.join("\n", sect.getList());
                                 request.setAttribute("result", s);
                             }
                         %>
