@@ -46,7 +46,7 @@
                     %>
                     <dl>
                         <dt>${sectionType.title}</dt>
-                        <dd><textarea rows="5" name="${sectionType.name()}" cols="90" name="text">${text}</textarea>
+                        <dd><textarea rows="5" name="${sectionType.name()}" cols="90">${text}</textarea>
                         </dd>
                     </dl>
                 </c:when>
@@ -60,9 +60,7 @@
                                 request.setAttribute("result", s);
                             }
                         %>
-                        <dd>
-                        <textarea autofocus name="${sectionType.name()}" rows="9" cols="90">${result}
-                        </textarea></dd>
+                        <dd><textarea name="${sectionType.name()}" rows="9" cols="90">${result}</textarea></dd>
                     </dl>
                 </c:when>
             </c:choose>

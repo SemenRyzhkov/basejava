@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.web;
 
+import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.SqlStorage;
 import ru.javawebinar.basejava.util.Config;
@@ -25,7 +26,16 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume r = sqlStorage.get(uuid);
+//        String fullName1 = request.getParameter("username");
+//        Resume r2 = new Resume(uuid, fullName1);
+//        sqlStorage.save(r2);
+        Resume r;
+        try {
+            r = sqlStorage.get(uuid);
+        } catch (NotExistStorageException e) {
+            r = new Resume(fullName);
+            sqlStorage.save(r);
+        }
         r.setFullName(fullName);
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
@@ -81,6 +91,12 @@ public class ResumeServlet extends HttpServlet {
                 sqlStorage.delete(uuid);
                 response.sendRedirect("resume");
                 return;
+            }
+            case "save" -> {
+                String Uuid = request.getParameter("newUuid");
+                r = new Resume();
+                r.setUuid(Uuid);
+
             }
             case "view", "edit" -> r = sqlStorage.get(uuid);
             default -> throw new IllegalArgumentException("Action" + action + "is illegal");

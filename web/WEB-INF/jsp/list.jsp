@@ -1,4 +1,5 @@
 <%@ page import="ru.javawebinar.basejava.model.ContactType" %>
+<%@ page import="java.util.UUID" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -14,12 +15,24 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
+    <%
+        String newUuid = UUID.randomUUID().toString();
+        request.setAttribute("newUuid", newUuid);
+    %>
     <table border="1" cellpadding="8" cellspacing="0">
         <tr>
             <th>Имя</th>
             <th>Email</th>
             <th></th>
             <th></th>
+        </tr>
+        <tr>
+            <td>
+               aaa
+            </td>
+            <td></td>
+            <td><a href="resume?uuid=${newUuid}&action=save"><img src="img/add.png"></a></td>
+            <td></td>
         </tr>
         <c:forEach items="${resumes}" var="resume">
             <jsp:useBean id="resume" type="ru.javawebinar.basejava.model.Resume"/>
