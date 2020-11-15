@@ -28,7 +28,7 @@
         </tr>
         <tr>
             <td>
-               aaa
+               Добавить новое резюме
             </td>
             <td></td>
             <td><a href="resume?uuid=${newUuid}&action=save"><img src="img/add.png"></a></td>

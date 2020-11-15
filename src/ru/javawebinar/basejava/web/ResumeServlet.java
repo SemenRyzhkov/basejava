@@ -26,17 +26,22 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-//        String fullName1 = request.getParameter("username");
-//        Resume r2 = new Resume(uuid, fullName1);
-//        sqlStorage.save(r2);
-        Resume r;
+
+        Resume r = null;
         try {
             r = sqlStorage.get(uuid);
         } catch (NotExistStorageException e) {
-            r = new Resume(fullName);
+            r = new Resume(uuid, fullName);
             sqlStorage.save(r);
         }
-        r.setFullName(fullName);
+
+        if (fullName == null || fullName.trim().length() == 0) {
+            request.setAttribute("resume", r);
+            request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
+        } else {
+            r.setFullName(fullName);
+        }
+
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
@@ -93,13 +98,10 @@ public class ResumeServlet extends HttpServlet {
                 return;
             }
             case "save" -> {
-                String Uuid = request.getParameter("newUuid");
                 r = new Resume();
-                r.setUuid(Uuid);
-
             }
             case "view", "edit" -> r = sqlStorage.get(uuid);
-            default -> throw new IllegalArgumentException("Action" + action + "is illegal");
+            default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", r);
         request.getRequestDispatcher("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
