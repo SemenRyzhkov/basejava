@@ -34,13 +34,7 @@ public class ResumeServlet extends HttpServlet {
             r = new Resume(uuid, fullName);
             sqlStorage.save(r);
         }
-
-        if (fullName == null || fullName.trim().length() == 0) {
-            request.setAttribute("resume", r);
-            request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
-        } else {
-            r.setFullName(fullName);
-        }
+        r.setFullName(fullName);
 
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
