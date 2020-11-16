@@ -1,6 +1,5 @@
 package ru.javawebinar.basejava.web;
 
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.SqlStorage;
 import ru.javawebinar.basejava.util.Config;
@@ -26,15 +25,27 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-
-        Resume r = null;
-        try {
+        Resume r;
+        if (uuid != null && uuid.trim().length() != 0) {
             r = sqlStorage.get(uuid);
-        } catch (NotExistStorageException e) {
-            r = new Resume(uuid, fullName);
+            r.setFullName(fullName);
+        } else {
+            r = new Resume(fullName);
             sqlStorage.save(r);
         }
-        r.setFullName(fullName);
+//        Resume r = sqlStorage.get(uuid);
+//        if (r == null) {
+//            r = new Resume(uuid, fullName);
+//        }
+
+//        Resume r;
+//        try {
+//            r = sqlStorage.get(uuid);
+//        } catch (NotExistStorageException e) {
+//            r = new Resume(uuid, fullName);
+//            sqlStorage.save(r);
+//        }
+//        r.setFullName(fullName);
 
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
@@ -57,26 +68,27 @@ public class ResumeServlet extends HttpServlet {
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     String[] result = request.getParameter(type.name()).split("\n");
                     List<String> list = new ArrayList<>();
-                    if (result.length != 0) {
-                        for (String s : result) {
-                            if (s != null && s.trim().length() != 0) {
-                                list.add(s);
-                            }
+                    for (String s : result) {
+                        if (s != null && s.trim().length() != 0) {
+                            list.add(s);
                         }
+                    }
+                    if (list.size() != 0) {
                         r.addSection(type, new TextListSection(list));
                     } else {
                         r.getSections().remove(type);
+
                     }
                 }
             }
         }
-
         sqlStorage.update(r);
         response.sendRedirect("resume");
 
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws
+            ServletException, IOException {
         String uuid = request.getParameter("uuid");
         String action = request.getParameter("action");
         if (action == null) {
