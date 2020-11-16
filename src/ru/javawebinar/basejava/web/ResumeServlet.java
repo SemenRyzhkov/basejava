@@ -33,19 +33,6 @@ public class ResumeServlet extends HttpServlet {
             r = new Resume(fullName);
             sqlStorage.save(r);
         }
-//        Resume r = sqlStorage.get(uuid);
-//        if (r == null) {
-//            r = new Resume(uuid, fullName);
-//        }
-
-//        Resume r;
-//        try {
-//            r = sqlStorage.get(uuid);
-//        } catch (NotExistStorageException e) {
-//            r = new Resume(uuid, fullName);
-//            sqlStorage.save(r);
-//        }
-//        r.setFullName(fullName);
 
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
