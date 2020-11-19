@@ -49,22 +49,21 @@
                     </li>
                 </c:forEach>
             </c:when>
-            <c:when test="${section == SectionType.EXPERIENCE || section == SectionType.EDUCATION}">
+            <c:when test="${section == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
                 <h4><%=sectionEntry.getKey().getTitle() + ": "%>
                 </h4>
                 <%
                     List<Organization> orgList = ((OrganizationSection) sectionEntry.getValue()).getOrganizationList();
                     request.setAttribute("orgList", orgList);
                 %>
-                <c:forEach var="org" items="${orgList}">
-                    <jsp:useBean id="org" type="ru.javawebinar.basejava.model.Organization"/>
-                    <%
-                        Link link = org.getHomePage();
-                        request.setAttribute("link", link);
-                        List<Organization.Experience> expList = org.getExperienceList();
-                        request.setAttribute("expList", expList);
-                    %>
-                    <%=link.toLink()%>
+                <c:forEach var="organize" items="${orgList}">
+                    <jsp:useBean id="organize" class="ru.javawebinar.basejava.model.Organization" scope="session"/>
+                    <c:set var="link" scope="session"
+                           value="${organize.homePage}"/>
+                    <c:set var="expList" scope="session"
+                           value="${organize.experienceList}"/>
+                    <jsp:useBean id="link" class="ru.javawebinar.basejava.model.Link" scope="request"/>
+                    ${link.toLink()}
                     <c:forEach var="exp" items="${expList}">
                         <jsp:useBean id="exp" type="ru.javawebinar.basejava.model.Organization.Experience"/>
                         <li><c:out value="${exp.toDate()} - ${exp.title} ${exp.description}"/><br/></li>

@@ -75,22 +75,44 @@
                 </c:when>
                 <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
                     <dl>
-                        <dt>${sectionType.title}</dt>
+                        <h4>
+                            <dt>${sectionType.title}</dt>
+                        </h4>
                         </br>
+
+                        <p>
+                            <dt>Новая рганизация</dt>
+                        <dd><input type="text" name="${sectionType.name()}newOrg" size=30 value=""></dd>
+                        </br>
+                        <dt>Url</dt>
+                        <dd><input type="text" name="${sectionType.name()}newUrl" size=30 value=""></dd>
+                        </br>
+                        <dt>С какого времени</dt>
+                        <dd><input type="date" name="${sectionType.name()}newStartDate" size=30 value=""></dd>
+                        </br>
+                        <dt>По какое время</dt>
+                        <dd><input type="date" name="${sectionType.name()}newEndDate" size=30 value=""></dd>
+                        </br>
+                        <dt>Позиция</dt>
+                        <dd><input type="text" name="${sectionType.name()}newPosition" size=30 value=""></dd>
+                        </br>
+                        <dt>Описание</dt>
+                        <dd><textarea name="${sectionType.name()}newDescription" rows="9" cols="90"></textarea></dd>
+                        </br>
+                        </p>
                         <%
                             OrganizationSection orgSection = (OrganizationSection) resume.getSection(sectionType);
-                            request.setAttribute("orgSection", orgSection);
+                            if (orgSection != null) {
+                                request.setAttribute("orgSection", orgSection);
+                            } else break;
                         %>
-                        <c:if test="${orgSection != null}">
-                            <c:set var="listOrg" scope="session"
-                                   value="${orgSection.organizationList}"/>
-                        </c:if>
 
-                        <c:forEach var="organ" items="${listOrg}" varStatus="count">
+                        <c:forEach var="organ" items="${orgSection.organizationList}" varStatus="count">
                             <jsp:useBean id="organ" type="ru.javawebinar.basejava.model.Organization"/>
                             <c:set var="orgIndex" scope="session"
                                    value="${sectionType.name()}${count.index}"/>
-                            <dt>Организация</dt>
+                            <p>
+                                <dt>Организация</dt>
                             <dd><input type="text" name="${orgIndex}${organ.homePage.name}"
                                        size=30 value="${organ.homePage.name}"></dd>
                             </br>
@@ -98,17 +120,34 @@
                             <dd><input type="text" name="${orgIndex}${organ.homePage.url}"
                                        size=30 value="${organ.homePage.url}"></dd>
                             </br>
+                            </p>
+
+                             <p>
+                                 <dt>Новая позиция</dt>
+                            <dd><input type="text" name="${orgIndex}newPosition" size=30 value=""></dd>
+                            </br>
+                                 <dt>С какого времени</dt>
+                             <dd><input type="date" name="${orgIndex}newStartDate" size=30 value=""></dd>
+                             </br>
+                             <dt>По какое время</dt>
+                             <dd><input type="date" name="${orgIndex}newEndDate" size=30 value=""></dd>
+                             </br>
+
+                             <dt>Описание</dt>
+                             <dd><textarea name="${orgIndex}newDescription" rows="9" cols="90"></textarea></dd>
+                             </br></p>
+
                             <c:forEach var="exp" items="${organ.experienceList}" varStatus="counter">
                                 <jsp:useBean id="exp" type="ru.javawebinar.basejava.model.Organization.Experience"/>
-                                <c:set var="expIndex" scope="session"
+                                <c:set var="expIndex"
                                        value="${orgIndex}${counter.index}"/>
                                 <dt>С какого времени</dt>
-                                <dd><input type="text" name="${expIndex}${exp.startTime.toString()}" size=30
+                                <dd><input type="date" name="${expIndex}${exp.startTime.toString()}" size=30
                                            value="${exp.startTime.toString()}">
                                 </dd>
                                 </br>
                                 <dt>По какое время</dt>
-                                <dd><input type="text" name="${expIndex}${exp.endTime.toString()}" size=30
+                                <dd><input type="date" name="${expIndex}${exp.endTime.toString()}" size=30
                                            value="${exp.endTime.toString()}"></dd>
                                 </br>
                                 <dt>Позиция</dt>

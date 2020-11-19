@@ -69,55 +69,67 @@ public class ResumeServlet extends HttpServlet {
                 }
                 case EXPERIENCE, EDUCATION -> {
                     OrganizationSection orgSection = (OrganizationSection) r.getSection(type);
-                    List<Organization> orgList = orgSection.getOrganizationList();
-                    System.out.println(orgList.size() + "111");
-                    for (int i = 0; i < orgList.size(); i++) {
-                        Organization org = orgList.get(i);
-                        String orgInd = type.name() + i;
-                        System.out.println(orgInd);
-                        String orgName = request.getParameter(orgInd + org.getHomePage().getName());
-                        System.out.println(orgName);
-                        String orgUrl = request.getParameter(orgInd + org.getHomePage().getUrl());
-                        System.out.println(orgUrl);
-                        Link link = org.getHomePage();
-                        if (orgName != null && orgName.trim().length() != 0) {
-                            link.setName(orgName);
-                            if (orgUrl != null && orgUrl.trim().length() != 0) {
-                                link.setUrl(orgUrl);
-                            } else link.setUrl("");
+                    List<Organization> orgList;
+                    /*Получаем новую организацию*/
+                    Organization newOrg = addOrganization(r, request, type);
+                    if (orgSection != null) {
+                        orgList = orgSection.getOrganizationList();
+                        for (int i = 0; i < orgList.size(); i++) {
+                            Organization org = orgList.get(i);
+                            String orgInd = type.name() + i;
+                            String orgName = request.getParameter(orgInd + org.getHomePage().getName());
+                            String orgUrl = request.getParameter(orgInd + org.getHomePage().getUrl());
+                            Link link = org.getHomePage();
+                            if (orgName != null && orgName.trim().length() != 0) {
+                                link.setName(orgName);
+                                if (orgUrl != null && orgUrl.trim().length() != 0) {
+                                    link.setUrl(orgUrl);
+                                } else link.setUrl("");
+                            }
+
+                            List<Organization.Experience> expList = org.getExperienceList();
+
+                            for (int j = 0; j < expList.size(); j++) {
+                                Organization.Experience exp = expList.get(j);
+                                String expInd = orgInd + j;
+                                String start = request.getParameter(expInd + exp.getStartTime().toString());
+                                if (start != null && start.trim().length() != 0) {
+                                    exp.setStartTime(LocalDate.parse(start));
+                                }
+                                String end = request.getParameter(expInd + exp.getEndTime().toString());
+                                if (end != null && end.trim().length() != 0) {
+                                    exp.setEndTime(LocalDate.parse(end));
+                                }
+                                String position = request.getParameter(expInd + exp.getTitle());
+                                System.out.println("position: " + position + " " + j);
+                                if (position != null && position.trim().length() != 0) {
+                                    exp.setTitle(position);
+                                }
+                                String description = request.getParameter(expInd + exp.getDescription());
+                                System.out.println("description: " + description + " " + j);
+                                if (description != null && description.trim().length() != 0) {
+                                    exp.setDescription(description);
+                                } else {
+                                    exp.setDescription("");
+                                }
+                            }
+                            /*Добавляем новую позицию*/
+                            List<Organization.Experience> newExpList = addSection(request, type,
+                                    type.name() + i + "newPosition", type.name() + i + "newStartDate",
+                                    type.name() + i + "newEndDate", type.name() + i + "newDescription");
+                            if (newExpList != null) {
+                                expList.addAll(newExpList);
+                            }
 
                         }
-                        List<Organization.Experience> expList = org.getExperienceList();
-
-                        for (int j = 0; j < expList.size(); j++) {
-                            Organization.Experience exp = expList.get(j);
-                            String expInd = orgInd + j;
-                            System.out.println(expInd);
-                            String start = request.getParameter(expInd + exp.getStartTime().toString());
-                            System.out.println(start);
-                            if (start != null && start.trim().length() != 0) {
-                                exp.setStartTime(LocalDate.parse(start));
-                            }
-                            String end = request.getParameter(expInd + exp.getEndTime().toString());
-                            System.out.println(end);
-
-                            if (end != null && end.trim().length() != 0) {
-                                exp.setEndTime(LocalDate.parse(end));
-                            }
-                            String position = request.getParameter(expInd + exp.getTitle());
-                            System.out.println(position);
-
-                            if (position != null && position.trim().length() != 0) {
-                                exp.setTitle(position);
-                            }
-
-                            String description = request.getParameter(expInd + exp.getDescription());
-                            System.out.println(description);
-                            if (description != null && description.trim().length() != 0) {
-                                exp.setDescription(description);
-                            } else {
-                                exp.setDescription("");
-                            }
+                        /*Добавляем, если секция существует*/
+                        if (newOrg != null) {
+                            orgList.add(newOrg);
+                        }
+                    } else {
+                        /*Добавляем, если секция не существует*/
+                        if (newOrg != null) {
+                            r.addSection(type, new OrganizationSection(newOrg));
                         }
                     }
                 }
@@ -147,11 +159,62 @@ public class ResumeServlet extends HttpServlet {
             case "save" -> {
                 r = new Resume();
             }
-            case "view", "edit" -> r = sqlStorage.get(uuid);
+            case "view", "edit" -> {
+                r = sqlStorage.get(uuid);
+            }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", r);
         request.getRequestDispatcher("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
                 .forward(request, response);
+    }
+
+    private Organization addOrganization(Resume r, HttpServletRequest request, SectionType type) {
+        String newOrgName = request.getParameter(type.name() + "newOrg");
+        Organization organization = null;
+        if (newOrgName != null && newOrgName.trim().length() != 0) {
+            organization = new Organization();
+            Link link = new Link(newOrgName, null);
+            String newUrl = request.getParameter(type.name() + "newUrl");
+            if (newUrl != null && newUrl.trim().length() != 0) {
+                link.setUrl(newUrl);
+            } else link.setUrl("");
+
+            List<Organization.Experience> newExpList = addSection(request, type, type.name() + "newPosition",
+                    type.name() + "newStartDate", type.name() + "newEndDate", type.name() + "newDescription");
+
+            if (newExpList != null) {
+                organization.setExperienceList(newExpList);
+            }
+            organization.setHomePage(link);
+        }
+        return organization;
+    }
+
+    private List<Organization.Experience> addSection(HttpServletRequest request, SectionType type,
+                                                     String position, String startDate, String endDate, String description) {
+        String newPosition = request.getParameter(position);
+        List<Organization.Experience> newExpList = null;
+        if (newPosition != null && newPosition.trim().length() != 0) {
+            newExpList = new ArrayList<>();
+            String newStartDate = request.getParameter(startDate);
+            String newEndDate = request.getParameter(endDate);
+            String newDescription = request.getParameter(description);
+            System.out.println("description" + newDescription);
+
+            if (newStartDate != null && newEndDate != null) {
+                Organization.Experience newExp = new Organization.Experience();
+                newExp.setStartTime(LocalDate.parse(newStartDate));
+                newExp.setEndTime(LocalDate.parse(newEndDate));
+                newExp.setTitle(newPosition);
+                if (newDescription != null && newDescription.trim().length() != 0) {
+                    newExp.setDescription(newDescription);
+                } else {
+                    newExp.setDescription("");
+                }
+                newExpList.add(newExp);
+            }
+        }
+        return newExpList;
     }
 }

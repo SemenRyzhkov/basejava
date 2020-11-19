@@ -14,7 +14,7 @@ public class ResumeTestData {
         resume.addSection(SectionType.QUALIFICATIONS, new TextListSection("Qualifications 1", "Qualifications 2", "Qualifications 3"));
         resume.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
-                        new Organization("Organization1", "url1",
+                        new Organization("Organization1", null,
                                 new Organization.Experience(2019, Month.AUGUST,"developerOld", "writeCode"),
                                 new Organization.Experience(2017, Month.JULY, 2019, Month.AUGUST, "developer", null)),
                         new Organization("Organization2", "url2",
