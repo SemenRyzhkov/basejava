@@ -2,9 +2,9 @@
 <%@ page import="ru.javawebinar.basejava.model.*" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
 <%@ page import="java.time.LocalDate" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
 <html>
@@ -62,11 +62,65 @@
                             TextListSection textListSection = (TextListSection) resume.getSection(sectionType);
                             request.setAttribute("textListSection", textListSection);
                         %>
+                        <c:if test="${textListSection != null}">
+                            <c:set var="list" scope="session"
+                                   value='<%=String.join("\n", textListSection.getList())%>'/>
+                        </c:if>
                         <c:if test="${textListSection == null}">
-                            <c:set var="text" scope="session" value="${fn:join(textListSection.list, '/n')}"/>
+                            <c:set var="list" scope="session" value=""/>
                         </c:if>
                         <dt>${sectionType.title}</dt>
-                        <dd><textarea name="${sectionType.name()}" rows="9" cols="90">${text}</textarea></dd>
+                        <dd><textarea name="${sectionType.name()}" rows="9" cols="90">${list}</textarea></dd>
+                    </dl>
+                </c:when>
+                <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
+                    <dl>
+                        <dt>${sectionType.title}</dt>
+                        </br>
+                        <%
+                            OrganizationSection orgSection = (OrganizationSection) resume.getSection(sectionType);
+                            request.setAttribute("orgSection", orgSection);
+                        %>
+                        <c:if test="${orgSection != null}">
+                            <c:set var="listOrg" scope="session"
+                                   value="${orgSection.organizationList}"/>
+                        </c:if>
+
+                        <c:forEach var="organ" items="${listOrg}" varStatus="count">
+                            <jsp:useBean id="organ" type="ru.javawebinar.basejava.model.Organization"/>
+                            <c:set var="orgIndex" scope="session"
+                                   value="${sectionType.name()}${count.index}"/>
+                            <dt>Организация</dt>
+                            <dd><input type="text" name="${orgIndex}${organ.homePage.name}"
+                                       size=30 value="${organ.homePage.name}"></dd>
+                            </br>
+                            <dt>Url</dt>
+                            <dd><input type="text" name="${orgIndex}${organ.homePage.url}"
+                                       size=30 value="${organ.homePage.url}"></dd>
+                            </br>
+                            <c:forEach var="exp" items="${organ.experienceList}" varStatus="counter">
+                                <jsp:useBean id="exp" type="ru.javawebinar.basejava.model.Organization.Experience"/>
+                                <c:set var="expIndex" scope="session"
+                                       value="${orgIndex}${counter.index}"/>
+                                <dt>С какого времени</dt>
+                                <dd><input type="text" name="${expIndex}${exp.startTime.toString()}" size=30
+                                           value="${exp.startTime.toString()}">
+                                </dd>
+                                </br>
+                                <dt>По какое время</dt>
+                                <dd><input type="text" name="${expIndex}${exp.endTime.toString()}" size=30
+                                           value="${exp.endTime.toString()}"></dd>
+                                </br>
+                                <dt>Позиция</dt>
+                                <dd><input type="text" name="${expIndex}${exp.title}" size=30
+                                           value="${exp.title}"></dd>
+                                </br>
+                                <dt>Описание</dt>
+                                <dd><textarea name="${expIndex}${exp.description}" rows="9"
+                                              cols="90">${exp.description}</textarea></dd>
+                                </br>
+                            </c:forEach>
+                        </c:forEach>
                     </dl>
                 </c:when>
             </c:choose>

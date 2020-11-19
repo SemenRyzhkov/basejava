@@ -34,7 +34,7 @@ public class DataSerializeStrategy implements SerializeStrategy {
                     }
                     case EXPERIENCE, EDUCATION -> {
                         dos.writeUTF(s.getKey().name());
-                        List<Organization> orgList = ((OrganizationListSection) s.getValue()).getOrganizationList();
+                        List<Organization> orgList = ((OrganizationSection) s.getValue()).getOrganizationList();
                         writeWithException(orgList, dos, e ->
                         {
                             dos.writeUTF(e.getHomePage().getName());
@@ -97,7 +97,7 @@ public class DataSerializeStrategy implements SerializeStrategy {
                                     orgList.add(new Organization(new Link(name, url.equals("null") ? null : url), expList));
                                 }
                         );
-                        resume.addSection(sectionType, new OrganizationListSection(orgList));
+                        resume.addSection(sectionType, new OrganizationSection(orgList));
                     }
                 }
             });

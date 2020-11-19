@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,60 @@ public class ResumeServlet extends HttpServlet {
                         r.addSection(type, new TextListSection(list));
                     } else {
                         r.getSections().remove(type);
+                    }
+                }
+                case EXPERIENCE, EDUCATION -> {
+                    OrganizationSection orgSection = (OrganizationSection) r.getSection(type);
+                    List<Organization> orgList = orgSection.getOrganizationList();
+                    System.out.println(orgList.size() + "111");
+                    for (int i = 0; i < orgList.size(); i++) {
+                        Organization org = orgList.get(i);
+                        String orgInd = type.name() + i;
+                        System.out.println(orgInd);
+                        String orgName = request.getParameter(orgInd + org.getHomePage().getName());
+                        System.out.println(orgName);
+                        String orgUrl = request.getParameter(orgInd + org.getHomePage().getUrl());
+                        System.out.println(orgUrl);
+                        Link link = org.getHomePage();
+                        if (orgName != null && orgName.trim().length() != 0) {
+                            link.setName(orgName);
+                            if (orgUrl != null && orgUrl.trim().length() != 0) {
+                                link.setUrl(orgUrl);
+                            } else link.setUrl("");
 
+                        }
+                        List<Organization.Experience> expList = org.getExperienceList();
+
+                        for (int j = 0; j < expList.size(); j++) {
+                            Organization.Experience exp = expList.get(j);
+                            String expInd = orgInd + j;
+                            System.out.println(expInd);
+                            String start = request.getParameter(expInd + exp.getStartTime().toString());
+                            System.out.println(start);
+                            if (start != null && start.trim().length() != 0) {
+                                exp.setStartTime(LocalDate.parse(start));
+                            }
+                            String end = request.getParameter(expInd + exp.getEndTime().toString());
+                            System.out.println(end);
+
+                            if (end != null && end.trim().length() != 0) {
+                                exp.setEndTime(LocalDate.parse(end));
+                            }
+                            String position = request.getParameter(expInd + exp.getTitle());
+                            System.out.println(position);
+
+                            if (position != null && position.trim().length() != 0) {
+                                exp.setTitle(position);
+                            }
+
+                            String description = request.getParameter(expInd + exp.getDescription());
+                            System.out.println(description);
+                            if (description != null && description.trim().length() != 0) {
+                                exp.setDescription(description);
+                            } else {
+                                exp.setDescription("");
+                            }
+                        }
                     }
                 }
             }
@@ -101,4 +155,3 @@ public class ResumeServlet extends HttpServlet {
                 .forward(request, response);
     }
 }
-

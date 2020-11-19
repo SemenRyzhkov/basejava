@@ -12,7 +12,7 @@ public class XMLSerializeStrategy implements SerializeStrategy {
     public XMLSerializeStrategy() {
         xmlParser = new XmlParser(
                 Resume.class, Organization.class, Link.class,
-                OrganizationListSection.class, TextSection.class, TextListSection.class, Organization.Experience.class);
+                OrganizationSection.class, TextSection.class, TextListSection.class, Organization.Experience.class);
     }
 
     @Override

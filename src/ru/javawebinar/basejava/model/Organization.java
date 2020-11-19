@@ -30,10 +30,10 @@ public class Organization implements Serializable {
         this(new Link(name, url), Arrays.asList(experiences));
     }
 
-    public Organization(Link homePage, List<Experience> experienceStages) {
-        Objects.requireNonNull(experienceStages, "experienceStagesList must not be null");
+    public Organization(Link homePage, List<Experience> experienceList) {
+        Objects.requireNonNull(experienceList, "experienceStagesList must not be null");
         this.homePage = homePage;
-        this.experienceList = experienceStages;
+        this.experienceList = experienceList;
     }
 
     public Link getHomePage() {
@@ -42,6 +42,14 @@ public class Organization implements Serializable {
 
     public List<Experience> getExperienceList() {
         return experienceList;
+    }
+
+    public void setHomePage(Link homePage) {
+        this.homePage = homePage;
+    }
+
+    public void setExperienceList(List<Experience> experienceList) {
+        this.experienceList = experienceList;
     }
 
     @Override
@@ -107,6 +115,22 @@ public class Organization implements Serializable {
 
         public LocalDate getEndTime() {
             return endTime;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public void setStartTime(LocalDate startTime) {
+            this.startTime = startTime;
+        }
+
+        public void setEndTime(LocalDate endTime) {
+            this.endTime = endTime;
         }
 
         @Override

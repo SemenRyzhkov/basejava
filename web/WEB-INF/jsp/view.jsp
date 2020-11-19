@@ -53,7 +53,7 @@
                 <h4><%=sectionEntry.getKey().getTitle() + ": "%>
                 </h4>
                 <%
-                    List<Organization> orgList = ((OrganizationListSection) sectionEntry.getValue()).getOrganizationList();
+                    List<Organization> orgList = ((OrganizationSection) sectionEntry.getValue()).getOrganizationList();
                     request.setAttribute("orgList", orgList);
                 %>
                 <c:forEach var="org" items="${orgList}">
