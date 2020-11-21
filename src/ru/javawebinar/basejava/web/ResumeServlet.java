@@ -70,7 +70,6 @@ public class ResumeServlet extends HttpServlet {
                 case EXPERIENCE, EDUCATION -> {
                     OrganizationSection orgSection = (OrganizationSection) r.getSection(type);
                     List<Organization> orgList;
-                    /*Получаем новую организацию*/
                     Organization newOrg = addOrganization(r, request, type);
                     if (orgSection != null) {
                         orgList = orgSection.getOrganizationList();
