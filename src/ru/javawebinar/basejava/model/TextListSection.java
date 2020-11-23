@@ -11,6 +11,7 @@ public class TextListSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
     private List<String> list;
+    public static final TextListSection EMPTY = new TextListSection("");
 
     public TextListSection() {
     }

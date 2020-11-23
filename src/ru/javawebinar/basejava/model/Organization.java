@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +18,8 @@ import static ru.javawebinar.basejava.util.DateUtil.of;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public static final Organization EMPTY = new Organization("", "", Experience.EMPTY);
 
     private Link homePage;
     private List<Experience> experienceList;
@@ -79,6 +80,7 @@ public class Organization implements Serializable {
         private LocalDate startTime;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate endTime;
+        public static final Experience EMPTY = new Experience();
 
         public Experience() {
         }
@@ -99,6 +101,7 @@ public class Organization implements Serializable {
             this.description = description;
             this.startTime = startTime;
             this.endTime = endTime;
+            this.description = description == null ? "" : description;
         }
 
         public String getTitle() {
@@ -152,13 +155,6 @@ public class Organization implements Serializable {
         @Override
         public String toString() {
             return startTime.toString() + " - " + endTime + title + "\n" + description;
-        }
-
-        public String toDate() {
-            DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d.MM.yy");
-            String start = startTime.format(formatters);
-            String end = endTime.format(formatters);
-            return (endTime.equals(NOW)) ? start + " по  настоящее время" : start + " - " + end;
         }
     }
 }

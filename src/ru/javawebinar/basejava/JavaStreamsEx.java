@@ -9,9 +9,6 @@ public class JavaStreamsEx {
 
         int[] array = {8, 1, 2, 3, 3, 2, 3, 7};
         System.out.println(minValue(array));
-
-        List<Integer> list = List.of(2, 1, 1);
-        System.out.println(oddOrEven(list));
     }
 
     public static int minValue(int[] values) {

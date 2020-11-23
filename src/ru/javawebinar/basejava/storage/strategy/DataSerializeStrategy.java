@@ -23,16 +23,19 @@ public class DataSerializeStrategy implements SerializeStrategy {
                 SectionType sectionType = s.getKey();
 
                 switch (sectionType) {
-                    case PERSONAL, OBJECTIVE -> {
+                    case PERSONAL:
+                    case OBJECTIVE:
                         dos.writeUTF(s.getKey().name());
                         dos.writeUTF(((TextSection) s.getValue()).getContent());
-                    }
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
                         dos.writeUTF(s.getKey().name());
                         List<String> list = ((TextListSection) s.getValue()).getList();
                         writeWithException(list, dos, dos::writeUTF);
-                    }
-                    case EXPERIENCE, EDUCATION -> {
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
                         dos.writeUTF(s.getKey().name());
                         List<Organization> orgList = ((OrganizationSection) s.getValue()).getOrganizationList();
                         writeWithException(orgList, dos, e ->
@@ -50,7 +53,7 @@ public class DataSerializeStrategy implements SerializeStrategy {
                                     }
                             );
                         });
-                    }
+                        break;
                 }
             });
         }
@@ -67,14 +70,19 @@ public class DataSerializeStrategy implements SerializeStrategy {
             readWithException(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
-                    case PERSONAL, OBJECTIVE -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        resume.addSection(sectionType, new TextSection(dis.readUTF()));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
                         List<String> textList = new ArrayList<>();
                         readWithException(dis, () ->
                                 textList.add(dis.readUTF()));
                         resume.addSection(sectionType, new TextListSection(textList));
-                    }
-                    case EXPERIENCE, EDUCATION -> {
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
                         List<Organization> orgList = new ArrayList<>();
                         readWithException(dis, () ->
                                 {
@@ -98,7 +106,7 @@ public class DataSerializeStrategy implements SerializeStrategy {
                                 }
                         );
                         resume.addSection(sectionType, new OrganizationSection(orgList));
-                    }
+                        break;
                 }
             });
             return resume;
@@ -115,7 +123,7 @@ public class DataSerializeStrategy implements SerializeStrategy {
     }
 
     private static void readWithException(DataInputStream dis,
-                                              SerializeReader reader) throws IOException {
+                                          SerializeReader reader) throws IOException {
         Objects.requireNonNull(reader);
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {

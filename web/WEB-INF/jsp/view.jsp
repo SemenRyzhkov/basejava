@@ -1,6 +1,6 @@
-<%@ page import="java.util.List" %>
 <%@ page import="ru.javawebinar.basejava.model.*" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
+<%@ page import="ru.javawebinar.basejava.util.HtmlUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -24,50 +24,58 @@
             <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
     </p>
-
+    <hr>
     <c:forEach var="sectionEntry" items="${resume.sections}">
         <jsp:useBean id="sectionEntry"
                      type="java.util.Map.Entry<ru.javawebinar.basejava.model.SectionType,
                          ru.javawebinar.basejava.model.AbstractSection>"/>
-        <c:set var="section" value="${sectionEntry.key}"/>
+        <c:set var="type" value="${sectionEntry.key}"/>
+        <tr>
+            <td colspan="2"><h2><a>${type.title}</a></h2></td>
+        </tr>
         <c:choose>
-            <c:when test="${section == SectionType.OBJECTIVE || section == SectionType.PERSONAL}">
-                <h4><%=sectionEntry.getKey().getTitle() + ": "%>
-                </h4>
-                <%=((TextSection) sectionEntry.getValue()).getContent()%>
+            <c:when test="${type == SectionType.OBJECTIVE || type == SectionType.PERSONAL}">
+                <tr>
+                    <td colspan="2">
+                        <%=((TextSection) sectionEntry.getValue()).getContent()%>
+                    </td>
+                </tr>
             </c:when>
-            <c:when test="${section == SectionType.ACHIEVEMENT || section == SectionType.QUALIFICATIONS}">
-                <h4><%=sectionEntry.getKey().getTitle() + ": "%>
-                </h4>
-                <%
-                    List<String> list = ((TextListSection) sectionEntry.getValue()).getList();
-                    request.setAttribute("list", list);
-                %>
-                <c:forEach var="achiev" items="${list}">
-                    <li>
-                            ${achiev}<br/>
-                    </li>
-                </c:forEach>
+            <c:when test="${type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS}">
+                <tr>
+                    <td colspan="2">
+                        <ul>
+                            <c:forEach var="item" items="<%=((TextListSection) sectionEntry.getValue()).getList()%>">
+                                <li>${item}</li>
+                            </c:forEach>
+                        </ul>
+                    </td>
+                </tr>
             </c:when>
-            <c:when test="${section == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
-                <h4><%=sectionEntry.getKey().getTitle() + ": "%>
-                </h4>
-                <%
-                    List<Organization> orgList = ((OrganizationSection) sectionEntry.getValue()).getOrganizationList();
-                    request.setAttribute("orgList", orgList);
-                %>
-                <c:forEach var="organize" items="${orgList}">
+            <c:when test="${type == SectionType.EXPERIENCE || type == SectionType.EDUCATION}">
+                <c:forEach var="organize"
+                           items="<%=((OrganizationSection) sectionEntry.getValue()).getOrganizationList()%>">
                     <jsp:useBean id="organize" class="ru.javawebinar.basejava.model.Organization" scope="session"/>
-                    <c:set var="link" scope="session"
-                           value="${organize.homePage}"/>
-                    <c:set var="expList" scope="session"
-                           value="${organize.experienceList}"/>
-                    <jsp:useBean id="link" class="ru.javawebinar.basejava.model.Link" scope="request"/>
-                    ${link.toLink()}
-                    <c:forEach var="exp" items="${expList}">
-                        <jsp:useBean id="exp" type="ru.javawebinar.basejava.model.Organization.Experience"/>
-                        <li><c:out value="${exp.toDate()} - ${exp.title} ${exp.description}"/><br/></li>
-                    </c:forEach>
+                        <tr>
+                            <td colspan="2">
+                                <c:choose>
+                                    <c:when test="${empty organize.homePage.url}">
+                                        <h4>${organize.homePage.name}</h4>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <h4><a href="${organize.homePage.url}">${organize.homePage.name}</a></h4>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
+                        <c:forEach var="position" items="${organize.experienceList}">
+                            <jsp:useBean id="position" type="ru.javawebinar.basejava.model.Organization.Experience"/>
+                            <tr>
+                                <td width="15%" style="vertical-align: top"><%=HtmlUtil.formatDates(position)%>
+                                </td>
+                                <td><b>${position.title}</b><br>${position.description}</td>
+                            </tr>
+                        </c:forEach>
                 </c:forEach>
             </c:when>
         </c:choose>

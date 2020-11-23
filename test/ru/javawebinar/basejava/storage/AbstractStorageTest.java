@@ -9,6 +9,7 @@ import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.util.ResumeTestData;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -75,7 +76,10 @@ public abstract class AbstractStorageTest {
     public void getAllSorted() {
         List<Resume> actual = storage.getAllSorted();
         System.out.println(actual);
-        List<Resume> expected = List.of(RESUME_1, RESUME_2, RESUME_3);
+        List<Resume> expected = new ArrayList<>();
+        expected.add(RESUME_1);
+        expected.add(RESUME_2);
+        expected.add(RESUME_3);
         System.out.println(expected);
         assertEquals(3, actual.size());
         assertEquals(expected, actual);
