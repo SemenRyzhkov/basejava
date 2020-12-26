@@ -15,7 +15,7 @@ public class Config {
     private final SqlStorage sqlStorage;
 
     private Config() {
-        try (InputStream is = Config.class.getResourceAsStream(PROPS)) {
+        try (InputStream is =  Config.class.getResourceAsStream(PROPS)) {
             Properties props = new Properties();
             props.load(is);
             storageDir = new File(props.getProperty("storage.dir"));
@@ -38,4 +38,6 @@ public class Config {
     public SqlStorage getSqlStorage() {
         return sqlStorage;
     }
+
+
 }

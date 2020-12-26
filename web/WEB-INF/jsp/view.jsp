@@ -25,6 +25,7 @@
         </c:forEach>
     </p>
     <hr>
+    <table cellpadding="2">
     <c:forEach var="sectionEntry" items="${resume.sections}">
         <jsp:useBean id="sectionEntry"
                      type="java.util.Map.Entry<ru.javawebinar.basejava.model.SectionType,
@@ -80,6 +81,7 @@
             </c:when>
         </c:choose>
     </c:forEach>
+    </table>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

@@ -82,7 +82,7 @@
                     </dl>
                     <c:forEach var="organize"
                                items='<%=((OrganizationSection) resume.getSection(sectionType)).getOrganizationList()%>'
-                               varStatus="count">
+                               varStatus="counter">
                         <jsp:useBean id="organize" type="ru.javawebinar.basejava.model.Organization"/>
                         <dl>
                             <dt>Организация</dt>
@@ -99,7 +99,7 @@
 
                         <div style="margin-left: 30px">
 
-                            <c:forEach var="exp" items="${organize.experienceList}" varStatus="counter">
+                            <c:forEach var="exp" items="${organize.experienceList}">
                                 <jsp:useBean id="exp" type="ru.javawebinar.basejava.model.Organization.Experience"/>
                                 <dl>
                                     <dt>Начальная дата:</dt>
